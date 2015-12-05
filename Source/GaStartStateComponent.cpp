@@ -90,12 +90,9 @@ eEvtReturn GaStartStateComponent::onKeyDown(EvtID ID,
 
 void GaStartStateComponent::advanceToGame() {
   //
-  // HACK :: Fucking horrid hack because destroy/detach isn't working
-  // TODO :: Poke Neil for correct way
-	// Moved to 
-
-  // Seems related to deleting the FONT
-  ScnCore::pImpl()->spawnEntity(ScnEntitySpawnParams(
+  auto sc = ScnCore::pImpl();
+  sc->removeEntity(getParentEntity());
+  sc->spawnEntity(ScnEntitySpawnParams(
       "GameStateE", "game", "GameEntity", MaMat4d(), nullptr));
 }
 

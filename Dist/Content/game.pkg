@@ -1,0 +1,29 @@
+{
+  "resources": [
+    // ----- STATE ENTITY ------------
+    {
+      "name": "GameEntity",
+      "type": "ScnEntity",
+      "components": [
+        {
+          "$Class": "GaGameStateComponent",
+          "type": "GaGameStateComponent"
+        }
+      ]
+    },
+
+    // ----- FLOOR ENTITY ------------
+    {
+      "name": "FloorEntity",
+      "type": "ScnEntity",
+      "components": [
+        {
+          "$Class": "GaGridComponent",
+          "type": "GaGridComponent",
+          "material": "$(ScnMaterial:materials.default)",
+          "gridsize": 16.0
+        }
+      ]
+    }
+  ]
+}

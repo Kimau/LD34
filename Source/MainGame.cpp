@@ -4,19 +4,20 @@
 
 //////////////////////////////////////////////////////////////////////////
 // PsyGameInit
-void PsyGameInit()
-{
-
-}
+void PsyGameInit() {}
 
 //////////////////////////////////////////////////////////////////////////
 // PsyLaunchGame
-void PsyLaunchGame()
-{
-	// Spawn entity called "MainEntity" from Dist/Content/default.pkg,
-	// and name it "MainEntity_0", and place it in the root of the scene.
-	ScnCore::pImpl()->spawnEntity( 
-		ScnEntitySpawnParams( 
-			"MainEntity_0", "default", "MainEntity",
-			MaMat4d(), nullptr ) );
+void PsyLaunchGame() {
+  PSY_LOG("Game Started!  \n");
+
+#ifdef DEBUG
+  // Spawn Game
+  ScnCore::pImpl()->spawnEntity(ScnEntitySpawnParams(
+      "GameStateE", "game", "GameEntity", MaMat4d(), nullptr));
+#else
+  // Spawn Start Menu
+  ScnCore::pImpl()->spawnEntity(ScnEntitySpawnParams(
+      "StartStateE", "start", "StartEntity", MaMat4d(), nullptr));
+#endif
 }

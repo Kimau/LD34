@@ -1,0 +1,302 @@
+{
+	"resources" : [
+		{
+			"type"			: "ScnMaterial",
+			"name"			: "default",
+
+			// Shader
+			"shader"		: "$(ScnShader:shaders.default)",
+
+			// Textures
+			"textures"		: {
+				"aDiffuseTex"	: "$(ScnTexture:textures.default)"
+			},
+
+			// Samplers
+			"samplers"		: {
+				"aDiffuseTex"	: {
+					"addressu" : "wrap",
+					"addressv" : "wrap",
+					"minfilter" : "linear_mipmap_linear",
+					"magfilter" : "linear"
+				}
+			},
+
+			// New render state.
+			"renderstate" : {
+				"blendstate" : {
+					"rendertarget" : [
+						{
+							"enable" : false
+						}
+					]
+				},
+
+				"depthstencilstate" : {
+					"depthtestenable" : true,
+					"depthwriteenable" : true,
+					"depthfunc" : "lessequal",
+					"stencilenable" : false
+				},
+
+				"rasteriserstate" : {
+					"fillmode" : "solid",
+					"cullmode" : "none",
+					"depthclipenable" : true,
+					"antialiasedlineenable" : true
+				}
+			}
+		},
+
+		{
+			"type"			: "ScnMaterial",
+			"name"			: "wireframe",
+
+			// Shader
+			"shader"		: "$(ScnShader:shaders.default)",
+
+			// Textures
+			"textures"		: {
+				"aDiffuseTex"	: "$(ScnTexture:textures.default)"
+			},
+
+			// Samplers
+			"samplers"		: {
+				"aDiffuseTex"	: {
+					"addressu" : "wrap",
+					"addressv" : "wrap",
+					"minfilter" : "linear_mipmap_linear",
+					"magfilter" : "linear"
+				}
+			},
+
+			// New render state.
+			"renderstate" : {
+				"blendstate" : {
+					"rendertarget" : [
+						{
+							"enable" : false
+						}
+					]
+				},
+
+				"depthstencilstate" : {
+					"depthtestenable" : true,
+					"depthwriteenable" : true,
+					"depthfunc" : "lessequal",
+					"stencilenable" : false
+				},
+
+				"rasteriserstate" : {
+					"fillmode" : "wireframe",
+					"cullmode" : "none",
+					"depthclipenable" : true,
+					"antialiasedlineenable" : true
+				}
+			}
+		},
+
+		{
+			"type"			: "ScnMaterial",
+			"name"			: "textured",
+
+			// Shader
+			"shader"		: "$(ScnShader:shaders.textured)",
+
+			// Textures
+			"textures"		: {
+				"aDiffuseTex"	: "$(ScnTexture:textures.default)"
+			},
+
+			// Samplers
+			"samplers"		: {
+				"aDiffuseTex"	: {
+					"addressu" : "wrap",
+					"addressv" : "wrap",
+					"minfilter" : "linear_mipmap_linear",
+					"magfilter" : "linear"
+				}
+			},
+
+			// New render state.
+			"renderstate" : {
+				"blendstate" : {
+					"rendertarget" : [
+						{
+							"enable" : false
+						}
+					]
+				},
+
+				"depthstencilstate" : {
+					"depthtestenable" : true,
+					"depthwriteenable" : true,
+					"depthfunc" : "lessequal",
+					"stencilenable" : false
+				},
+
+				"rasteriserstate" : {
+					"fillmode" : "solid",
+					"cullmode" : "none",
+					"depthclipenable" : true,
+					"antialiasedlineenable" : true
+				}
+			}
+		},
+
+		{
+			"type"			: "ScnMaterial",
+			"name"			: "test_rt",
+
+			// Shader
+			"shader"		: "$(ScnShader:shaders.fullscreen)",
+
+			// Textures
+			"textures"		: {
+				"aColourTex"	: "$(ScnTexture:textures.test_rt)"
+				//"aDepthTex"		: "$(ScnTexture:textures.test_dst)"
+			},
+
+			// Samplers
+			"samplers"		: {
+				"aColourTex"	: {
+					"addressu" : "wrap",
+					"addressv" : "wrap",
+					"minfilter" : "linear",
+					"magfilter" : "linear"
+				},
+				"aDepthTex"	: {
+					"addressu" : "wrap",
+					"addressv" : "wrap",
+					"minfilter" : "linear",
+					"magfilter" : "linear"
+				}
+			},
+
+			// New render state.
+			"renderstate" : {
+				"blendstate" : {
+					"rendertarget" : [
+						{
+							"enable" : false
+						}
+					]
+				},
+
+				"depthstencilstate" : {
+					"depthtestenable" : false,
+					"depthwriteenable" : false,
+					"depthfunc" : "lessequal",
+					"stencilenable" : false
+				},
+
+				"rasteriserstate" : {
+					"fillmode" : "solid",
+					"cullmode" : "none",
+					"depthclipenable" : false,
+					"antialiasedlineenable" : false
+				}
+			}
+		},
+
+		{
+			"type"			: "ScnMaterial",
+			"name"			: "debugrender",
+
+			// Shader
+			"shader"		: "$(ScnShader:shaders.default)",
+
+			// Textures
+			"textures"		: {
+			},
+
+			// Samplers
+			"samplers"		: {
+			},
+
+			// New render state.
+			"renderstate" : {
+				"blendstate" : {
+					"rendertarget" : [
+						{
+							"enable" : true,
+							"srcblend" : "srcalpha",
+							"destblend" : "invsrcalpha",
+							"blendop" : "add",
+							"srcblendalpha" : "srcalpha",
+							"destblendalpha" : "invsrcalpha",
+							"blendopalpha" : "add",
+							"writemask" : 15
+						}
+					]
+				},
+
+				"depthstencilstate" : {
+					"depthtestenable" : true,
+					"depthwriteenable" : false,
+					"depthfunc" : "lessequal",
+					"stencilenable" : false
+				},
+
+				"rasteriserstate" : {
+					"fillmode" : "solid",
+					"cullmode" : "none",
+					"depthclipenable" : true,
+					"antialiasedlineenable" : true,
+					"depthbias" : 1.0,
+					"slopescaleddepthbias" : 0.0
+				}
+			}
+		},
+
+		{
+			"type"			: "ScnMaterial",
+			"name"			: "test",
+
+			// Shader
+			"shader"		: "$(ScnShader:shaders.textured)",
+
+			// Textures
+			"textures"		: {
+				"aDiffuseTex"	: "$(ScnTexture:textures.test)"
+			},
+
+			// Samplers
+			"samplers"		: {
+				"aDiffuseTex"	: {
+					"addressu" : "wrap",
+					"addressv" : "wrap",
+					"minfilter" : "linear_mipmap_linear",
+					"magfilter" : "linear"
+				}
+			},
+
+			// New render state.
+			"renderstate" : {
+				"blendstate" : {
+					"rendertarget" : [
+						{
+							"enable" : false,
+							"writemask" : 15
+						}
+					]
+				},
+
+				"depthstencilstate" : {
+					"depthtestenable" : true,
+					"depthwriteenable" : true,
+					"depthfunc" : "lessequal",
+					"stencilenable" : false
+				},
+
+				"rasteriserstate" : {
+					"fillmode" : "solid",
+					"cullmode" : "none",
+					"depthclipenable" : true,
+					"antialiasedlineenable" : true
+				}
+			}
+
+		}
+	]
+}

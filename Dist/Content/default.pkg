@@ -1,11 +1,72 @@
 {
-	"resources" : [
-		{
-			"name"		:		"MainEntity",
-			"type"		:		"ScnEntity",
+  "resources": [
+      // ----- CAMERA ENTITY ------------
+    {
+      "name": "CameraEntity",
+      "type": "ScnEntity",
+      "components": [
+        {
+          "$Class": "GaCameraComponent",
+          "type": "GaCameraComponent"
+        },
+        {
+          "$Class": "ScnSoundListenerComponent",
+          "type": "ScnSoundListenerComponent"
+        },
+        {
+          "$Class": "ScnViewComponent",
+          "type": "ScnViewComponent",
+          "x": 0.0,
+          "y": 0.0,
+          "width": 1.0,
+          "height": 1.0,
+          "near": 1.0,
+          "far": 4000.0,
+          "horizontalfov": 0.75,
+          "verticalfov": 0.0,
+          "rendermask": 2,
+          "clearcolour": "1.0, 0.0, 1.0, 1.0",
+          "enablecleardepth": true,
+          "rendertarget": "$(ScnTexture:textures.test_rt)"
+        },
+        {
+          "$Class": "ScnViewComponent",
+          "type": "ScnViewComponent",
+          "x": 0.0,
+          "y": 0.0,
+          "width": 1.0,
+          "height": 1.0,
+          "near": 1.0,
+          "far": 4000.0,
+          "horizontalfov": 0.75,
+          "verticalfov": 0.0,
+          "rendermask": 1
+        },
+        {
+          "$Class": "ScnLightComponent",
+          "type": "ScnLightComponent",
+          "name": "Sunlight",
+          "min": 16.0,
+          "mid": 2048.0,
+          "max": 1000000.0
+        }
+      ]
+    },
 
-			"components" : [
-			]
-		}
-	]
+
+    // ----- DEBUG ENTITY ------------
+    {
+      "name": "DebugDrawer",
+      "type": "ScnEntity",
+      "components": [
+        {
+          "$Class": "ScnDebugRenderComponent",
+          "type": "ScnDebugRenderComponent",
+          "noofvertices": 65536,
+          "material": "$(ScnMaterial:materials.debugrender)",
+          "rendermask": 3
+        }
+      ]
+    }
+  ]
 }

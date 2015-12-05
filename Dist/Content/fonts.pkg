@@ -1,0 +1,98 @@
+{
+	"resources" : [
+
+		{
+			"type"			: "ScnShader",
+			"name"			: "font_shader",
+			"sources"		: {
+				"D3D11_4_0_LEVEL_9_1" : "Content/Engine/font.hlsl",
+				"GLSL_330" : "Content/Engine/font.glsl",
+				"GLSL_ES_100" : "Content/Engine/font.glsl"
+			},
+
+			"@(android)" : {
+				"sources" 		: {
+					"GLSL_ES_100" : "Content/Engine/font.glsl"
+				}
+			},
+
+			"excludepermutations" : [
+				"RENDER_DEFERRED",
+				"RENDER_FORWARD_PLUS",
+				"PASS_SHADOW",
+				"MESH_INSTANCED_3D",
+				"LIGHTING_DIFFUSE"
+			],
+
+			"entrypoints"		: {
+				"vertex" : 		"vertexMain",
+				"pixel" :		"pixelMain"
+			}
+		},
+
+		{
+			"type"			: "ScnMaterial",
+			"name"			: "default",
+
+			// Shader
+			"shader"		: "$(ScnShader:this.font_shader)",
+
+			// Textures
+			"textures"		: {
+				"aDiffuseTex"	: "$(ScnTexture:textures.default)"
+			},
+
+			// Samplers
+			"samplers"		: {
+				"aDiffuseTex"	: {
+					"addressu" : "wrap",
+					"addressv" : "wrap",
+					"minfilter" : "linear_mipmap_linear",
+					"magfilter" : "linear"
+				}
+			},
+
+			// New render state.
+			"renderstate" : {
+				"blendstate" : {
+					"rendertarget" : [
+						{
+							"enable" : true,
+							"srcblend" : "srcalpha",
+							"destblend" : "invsrcalpha",
+							"blendop" : "add",
+							"srcblendalpha" : "srcalpha",
+							"destblendalpha" : "invsrcalpha",
+							"blendopalpha" : "add",
+							"writemask" : 15
+						}
+					]
+				},
+
+				"depthstencilstate" : {
+					"depthtestenable" : false,
+					"depthwriteenable" : false,
+					"depthfunc" : "lessequal",
+					"stencilenable" : false
+				},
+
+				"rasteriserstate" : {
+					"fillmode" : "solid",
+					"cullmode" : "none",
+					"depthclipenable" : true,
+					"antialiasedlineenable" : true
+				}
+			}
+		},
+
+		{
+			"type"			: "ScnFont",
+			"name"			: "hud",
+
+			"source"		: "Content/Source/courier.ttf",
+			"distancefield"	: true,
+			"nominalsize"	: 16,
+			"spread"		: 24
+		}
+	]
+}

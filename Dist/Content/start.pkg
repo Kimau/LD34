@@ -1,0 +1,56 @@
+{
+  "resources": [
+    // ----- STATE ENTITY ------------
+    {
+      "name": "StartEntity",
+      "type": "ScnEntity",
+      "components": [
+        {
+          "$Class": "GaStartStateComponent",
+          "type": "GaStartStateComponent"
+        },
+        {
+          "$Class": "ScnCanvasComponent",
+          "type": "ScnCanvasComponent",
+          "clear" : true,
+          "noofvertices" : 4096,
+          "left" : -1.0,
+          "top" : -1.0,
+          "right" : 1.0,
+          "bottom" : 1.0
+        },
+        {
+          "$Class": "ScnMaterialComponent",
+          "type": "ScnMaterialComponent",
+          "name": "default2d",
+          "material": "$(ScnMaterial:materials.default)",
+          "permutation": "2d"
+        },
+        {
+          "$Class": "ScnFontComponent",
+          "type": "ScnFontComponent",
+          "font": "$(ScnFont:fonts.hud)",
+          "material": "$(ScnMaterial:fonts.default)"
+        },        
+        {    
+          "$Class": "GaMenuComponent",
+          "type": "GaMenuComponent"        
+        }
+      ]
+    },
+
+    // ----- FLOOR ENTITY ------------
+    {
+      "name": "FloorEntity",
+      "type": "ScnEntity",
+      "components": [
+        {
+          "$Class": "GaGridComponent",
+          "type": "GaGridComponent",
+          "material": "$(ScnMaterial:materials.default)",
+          "gridsize": 16.0
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+	"resources" : [
+
+		{
+			"type"			: "ScnTexture",
+			"name"			: "test",
+			"source"		: "Content/Source/testtexture.png",
+
+			"@(pc)"	: {
+				"format" : "DXT1"
+			},
+
+			"@(android)" : {
+				"format" : "ETC1",
+
+				"@(tegra)" : {
+					"format" : "DXT1"
+				}
+			},
+
+			"@(html5)" : {
+				"format" : "DXT1"
+			}
+		},
+
+		{
+			"type"			: "ScnTexture",
+			"name"			: "default",
+			"source"		: "Content/Source/default.png",
+			"spread"		: 32,
+
+			"@(pc)"	: {
+				"format" : "DXT1"
+			},
+
+			"@(android)" : {
+				"format" : "ETC1",
+
+				"@(tegra)" : {
+					"format" : "DXT1"
+				}
+			},
+
+			"@(html5)" : {
+				"format" : "DXT1"
+			}
+		},
+
+		////////////////////////////////////////////////////////////////////////
+		// Render target + depth stencil target
+		{
+			"type" : "ScnTexture",
+			"name" : "test_rt",
+			"rendertarget" : true,
+			"width" : -2,
+			"height" : -2,
+			"texturetype" : "tex2d",
+			"format" : "R8G8B8A8"
+		}
+	]
+}

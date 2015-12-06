@@ -57,7 +57,13 @@
     {
       "name": "Dummy",
       "type": "ScnEntity",
-      "components": [     ]
+      "components": [     
+          {
+          "type"          : "ScnDebugRenderComponent",
+          "noofvertices"      : 65536,
+          "material"        : "$(ScnMaterial:materials.debugrender)"
+        }
+      ]
     },
 
 

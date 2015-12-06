@@ -1,14 +1,20 @@
 {
   "resources": [
-    // ----- STATE ENTITY ------------
-    {
+   // ----- STATE ENTITY ------------
+  {
       "name": "GameEntity",
       "type": "ScnEntity",
-      "components": [
-        {
+      "components": [{
           "$Class": "GaGameStateComponent",
           "type": "GaGameStateComponent"
+        },
+
+        {
+          "type": "ScnPhysicsWorldComponent",
+          "gravity": "0.0, -9.8, 0.0",
+          "debugdrawworld": true
         }
+
       ]
     },
 
@@ -16,14 +22,73 @@
     {
       "name": "FloorEntity",
       "type": "ScnEntity",
-      "components": [
-        {
+      "components": [{
           "$Class": "GaGridComponent",
           "type": "GaGridComponent",
           "material": "$(ScnMaterial:materials.default)",
           "gridsize": 16.0
+        },
+
+        {
+          "type": "ScnPhysicsRigidBodyComponent",
+
+          "mass": 0.0,
+          "friction": 0.5,
+          "rollingfriction": 0.1,
+          "restitution": 0.5
+        },
+
+        {
+          "type": "ScnPhysicsBoxCollisionComponent",
+
+          "size": "1000.0, 1.0, 1000.0",
+          "localscaling": "1.0, 1.0, 1.0",
+          "margin": 0.0
+        },
+        {
+          "type": "ScnModelComponent",
+          "model": "$(ScnModel:this.cube_model)",
+          "scale": "1000.0, 1.0, 1000.0"
         }
       ]
+    },
+
+    // ----- Cube Object ----
+    {
+      "name": "CubeEntity",
+      "type": "ScnEntity",
+
+      "components": [{
+          "type": "ScnPhysicsBoxCollisionComponent",
+          "size": "1.0, 1.0, 1.0"
+        },
+
+        {
+          "type": "ScnPhysicsRigidBodyComponent",
+
+          "mass": 1.0,
+          "friction": 1.0,
+          "rollingfriction": 1.0,
+          "restitution": 0.8,
+          "linearsleepingthreshold": 0.1,
+          "angularsleepingthreshold": 0.1
+        },
+
+        {
+          "type": "ScnModelComponent",
+          "model": "$(ScnModel:this.cube_model)",
+          "scale": "1.0, 1.0, 1.0"
+        }
+      ]
+    },
+
+    {
+      "type": "ScnModel",
+      "name": "cube_model",
+      "source": "Content/Source/cube.fbx",
+      "materials": {
+        "(.*)": "$(ScnMaterial:materials.test)"
+      }
     }
   ]
 }

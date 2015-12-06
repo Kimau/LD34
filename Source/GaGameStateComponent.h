@@ -26,6 +26,9 @@ class GaGameStateComponent : public ScnComponent {
   eEvtReturn onKeyUp(EvtID ID, const EvtBaseEvent& Event);
   eEvtReturn onKeyDown(EvtID ID, const EvtBaseEvent& Event);
 
+  void returnToMenu();
+
+
  private:
   BcU32 LevelNum_;
   ScnEntity* Cube_ = nullptr;

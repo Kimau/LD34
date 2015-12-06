@@ -39,7 +39,12 @@
           "angularsleepingthreshold": 0.1
         },
         
-        {"$Class": "GaGridComponent","type": "GaGridComponent","material": "$(ScnMaterial:materials.default)","gridsize": 16.0}
+        {
+          "$Class": "GaGridComponent",
+          "type": "GaGridComponent",
+          "material": "$(ScnMaterial:materials.default)",
+          "gridsize": 16.0
+        }
       ]
     },
 
@@ -48,7 +53,8 @@
       "name": "CubeEntity",
       "type": "ScnEntity",
 
-      "components": [{
+      "components": [
+        {
           "type": "ScnPhysicsBoxCollisionComponent",
           "size": "2.0, 2.0, 2.0"
         },
@@ -62,9 +68,14 @@
           "restitution": 0.8,
           "linearsleepingthreshold": 0.1,
           "angularsleepingthreshold": 0.1
-        },     
+        }
 
-        {"type": "ScnModelComponent",          "model": "$(ScnModel:this.cube_model)",          "scale": "1.0, 1.0, 1.0"        }
+        //,     
+        //{
+        //  "type": "ScnModelComponent",         
+        //  "model": "$(ScnModel:this.cube_model)",          
+        //  "scale": "1.0, 1.0, 1.0"        
+        //}
       ]
     },
 

@@ -34,8 +34,10 @@ void GaGameStateComponent::onAttach(ScnEntityWeakRef Parent) {
   Super::onAttach(Parent);
 
   // Spawn Game Bits
-  auto cam = ScnCore::pImpl()->spawnEntity(ScnEntitySpawnParams(
+ auto cam = 
+  ScnCore::pImpl()->spawnEntity(ScnEntitySpawnParams(
     "CameraEntity_0", "default", "CameraEntity", MaMat4d(), Parent));
+  
   if (cam != nullptr) {
     Cam_ = cam->getComponentByType<GaCameraComponent>();
 
@@ -54,12 +56,12 @@ void GaGameStateComponent::onAttach(ScnEntityWeakRef Parent) {
     ScnCore::pImpl()->spawnEntity(ScnEntitySpawnParams(
       "CubeEntity_0", "game", "CubeEntity", Transform, Parent));
   }
-
+  /*
   MaMat4d Transform;
   Transform.translation(MaVec3d(0, -10.0f, 0));
   ScnCore::pImpl()->spawnEntity(ScnEntitySpawnParams(
       "FloorGrid", "game", "FloorEntity", Transform, Parent));
-
+      */
   using namespace std::placeholders;
   OsCore::pImpl()->subscribe(
       osEVT_INPUT_KEYDOWN, this,
@@ -104,6 +106,15 @@ eEvtReturn GaGameStateComponent::onKeyDown(EvtID ID,
   return evtRET_PASS;
 }
 
+void GaGameStateComponent::returnToMenu()
+{
+  //
+  auto sc = ScnCore::pImpl();
+  sc->removeEntity(getParentEntity());
+  sc->spawnEntity(ScnEntitySpawnParams("StartStateE", "start", "StartEntity",
+    MaMat4d(), nullptr));
+}
+
 //////////////////////////////////////////////////////////////////////////
 // onKeyUp
 eEvtReturn GaGameStateComponent::onKeyUp(EvtID ID, const EvtBaseEvent& Event) {
@@ -122,6 +133,10 @@ eEvtReturn GaGameStateComponent::onKeyUp(EvtID ID, const EvtBaseEvent& Event) {
       break;
     case 'S':
     case OsEventInputKeyboard::KEYCODE_DOWN:
+      break;
+
+    case OsEventInputKeyboard::KEYCODE_ESCAPE:
+      returnToMenu();
       break;
   }
 

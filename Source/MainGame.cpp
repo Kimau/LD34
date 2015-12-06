@@ -11,8 +11,8 @@ void PsyGameInit() {}
 void PsyLaunchGame() {
   PSY_LOG("Game Started!  \n");
 
-  ScnCore::pImpl()->spawnEntity(ScnEntitySpawnParams(
-    "DummyE", "default", "Dummy", MaMat4d(), nullptr));
+  ScnCore::pImpl()->spawnEntity(
+      ScnEntitySpawnParams("DummyE", "default", "Dummy", MaMat4d(), nullptr));
 
 #ifdef DEBUGPOO
   // Spawn Game

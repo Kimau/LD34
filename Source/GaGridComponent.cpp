@@ -26,34 +26,19 @@ GaGridComponent::GaGridComponent() {}
 GaGridComponent::~GaGridComponent() {}
 
 void GaGridComponent::render(ScnRenderContext& RenderContext) {
-  /* TODO :: New Renderer
-
-  // Upload.
-  BcU32 VertexDataSize = NoofVertices_ * sizeof(GaGridComponentVertex);
-  if (VertexDataSize > 0) {
-    UploadFence_.increment();
-    RsCore::pImpl()->updateBuffer(
-        pVertexBuffer_, 0, VertexDataSize, RsResourceUpdateFlags::ASYNC,
-        [this, VertexDataSize](RsBuffer* Buffer,
-                               const RsBufferLock& BufferLock) {
-          BcAssert(VertexDataSize <= Buffer->getDesc().SizeBytes_);
-          BcMemCopy(BufferLock.Buffer_, pVertices_, VertexDataSize);
-          UploadFence_.decrement();
-        });
-  }
 
   // Material
   {
     // Set model parameters on material.
     ObjectUniforms_.WorldTransform_ = getParentEntity()->getWorldMatrix();
     RsCore::pImpl()->updateBuffer(
-        pUniformBuffer_, 0, sizeof(ObjectUniforms_),
+        pUniformBuffer_.get(), 0, sizeof(ObjectUniforms_),
         RsResourceUpdateFlags::ASYNC,
         [this](RsBuffer* Buffer, const RsBufferLock& Lock) {
           BcMemCopy(Lock.Buffer_, &ObjectUniforms_, sizeof(ObjectUniforms_));
         });
 
-    MaterialComponent_->setObjectUniformBlock(pUniformBuffer_);
+    MaterialComponent_->setObjectUniformBlock(pUniformBuffer_.get());
     RenderContext.pViewComponent_->setMaterialParameters(MaterialComponent_);
     MaterialComponent_->bind(RenderContext.pFrame_, RenderContext.Sort_);
   }
@@ -61,16 +46,19 @@ void GaGridComponent::render(ScnRenderContext& RenderContext) {
   // Queue Render
   RenderFence_.increment();
   RenderContext.pFrame_->queueRenderNode(
-      RenderContext.Sort_, [this](RsContext* Context) {
-        Context->setVertexBuffer(0, pVertexBuffer_,
-                                 sizeof(GaGridComponentVertex));
-        Context->setVertexDeclaration(pVertexDeclaration_);
-        Context->drawPrimitives(RsTopologyType::LINE_LIST, 0,
-                                NoofVertices_);  // Vertex Offset & Length
+      RenderContext.Sort_, [
+      this, 
+        GeometryBinding = GeometryBinding_.get(),
+        DrawProgramBinding = MaterialComponent_->getProgramBinding(),
+        RenderState = MaterialComponent_->getRenderState(),
+        FrameBuffer = RenderContext.pViewComponent_->getFrameBuffer(),
+      Viewport = &RenderContext.pViewComponent_->getViewport()
+    ](RsContext* Context) {
+
+        Context->drawPrimitives(GeometryBinding, DrawProgramBinding, RenderState, FrameBuffer, Viewport, nullptr, RsTopologyType::LINE_LIST, 0, NoofVertices_);
+
         RenderFence_.decrement();
       });
-
-  */
 }
 
 MaAABB GaGridComponent::getAABB() const {
@@ -87,31 +75,50 @@ void GaGridComponent::onAttach(ScnEntityWeakRef Parent) {
   // Allocate our own vertex buffer data.
   NoofVertices_ = NoofGridLines_ * 4;
   pVertices_ = new GaGridComponentVertex[NoofVertices_];
-  /*
-    // Setup Streams
-    pVertexDeclaration_ = RsCore::pImpl()->createVertexDeclaration(
-        RsVertexDeclarationDesc(2)
-            .addElement(RsVertexElement(0, 0, 4, RsVertexDataType::FLOAT32,
-                                        RsVertexUsage::POSITION, 0))
-            .addElement(RsVertexElement(0, 16, 4, RsVertexDataType::UBYTE_NORM,
-                                        RsVertexUsage::COLOUR, 0)));
 
-    // Allocate render side vertex buffer.
-    pVertexBuffer_ = RsCore::pImpl()->createBuffer(
-        RsBufferDesc(RsBufferType::VERTEX, RsResourceCreationFlags::STREAM,
-                     NoofVertices_ * sizeof(GaGridComponentVertex)));
+  // Setup Streams
+  pVertexDeclaration_ = RsCore::pImpl()->createVertexDeclaration(
+      RsVertexDeclarationDesc(2)
+          .addElement(RsVertexElement(0, 0, 4, RsVertexDataType::FLOAT32,
+                                      RsVertexUsage::POSITION, 0))
+          .addElement(RsVertexElement(0, 16, 4, RsVertexDataType::UBYTE_NORM,
+                                      RsVertexUsage::COLOUR, 0)), 
+    getFullName().c_str());
 
-    // Allocate uniform buffer object.
-    pUniformBuffer_ = RsCore::pImpl()->createBuffer(
-        RsBufferDesc(RsBufferType::UNIFORM, RsResourceCreationFlags::STREAM,
-                     sizeof(ScnShaderObjectUniformBlockData)));
-          */
+  // Allocate render side vertex buffer.
+  pVertexBuffer_ = RsCore::pImpl()->createBuffer(
+      RsBufferDesc(RsBufferType::VERTEX, RsResourceCreationFlags::STREAM,
+                   NoofVertices_ * sizeof(GaGridComponentVertex)), getFullName().c_str());
+
+  // Allocate uniform buffer object.
+  pUniformBuffer_ = RsCore::pImpl()->createBuffer(
+      RsBufferDesc(RsBufferType::UNIFORM, RsResourceCreationFlags::STREAM,
+                   sizeof(ScnShaderObjectUniformBlockData)), getFullName().c_str());
 
   MaterialComponent_ = Parent->attach<ScnMaterialComponent>(
       BcName::INVALID, Material_, ScnShaderPermutationFlags::MESH_STATIC_3D |
                                       ScnShaderPermutationFlags::LIGHTING_NONE);
 
   generateGrid();
+
+  // Upload.
+  BcU32 VertexDataSize = NoofVertices_ * sizeof(GaGridComponentVertex);
+  if (VertexDataSize > 0) {
+    UploadFence_.increment();
+    RsCore::pImpl()->updateBuffer(
+      pVertexBuffer_.get(), 0, VertexDataSize, RsResourceUpdateFlags::ASYNC,
+      [this, VertexDataSize](RsBuffer* Buffer,
+        const RsBufferLock& BufferLock) {
+      BcAssert(VertexDataSize <= Buffer->getDesc().SizeBytes_);
+      BcMemCopy(BufferLock.Buffer_, pVertices_, VertexDataSize);
+      UploadFence_.decrement();
+    });
+  }
+
+  RsGeometryBindingDesc GeometryBindingDesc;
+  GeometryBindingDesc.setVertexBuffer(0, pVertexBuffer_.get(), sizeof(GaGridComponentVertex));
+  GeometryBindingDesc.setVertexDeclaration(pVertexDeclaration_.get());
+  GeometryBinding_ = RsCore::pImpl()->createGeometryBinding(GeometryBindingDesc, getFullName().c_str());
 }
 
 void GaGridComponent::generateGrid() {
@@ -146,11 +153,13 @@ void GaGridComponent::onDetach(ScnEntityWeakRef Parent) {
 
   UploadFence_.wait();
   RenderFence_.wait();
-  /*
-    RsCore::pImpl()->destroyResource(pVertexBuffer_);
-    RsCore::pImpl()->destroyResource(pUniformBuffer_);
-    RsCore::pImpl()->destroyResource(pVertexDeclaration_);
-  */
+
+
+  GeometryBinding_.reset();
+  pVertexDeclaration_.reset();
+  pVertexBuffer_.reset();
+  pUniformBuffer_.reset();
+
   delete[] pVertices_;
 
   Super::onDetach(Parent);

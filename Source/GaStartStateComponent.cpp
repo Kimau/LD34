@@ -92,8 +92,8 @@ void GaStartStateComponent::advanceToGame() {
   //
   auto sc = ScnCore::pImpl();
   sc->removeEntity(getParentEntity());
-  sc->spawnEntity(ScnEntitySpawnParams(
-      "GameStateE", "game", "GameEntity", MaMat4d(), nullptr));
+  sc->spawnEntity(ScnEntitySpawnParams("GameStateE", "game", "GameEntity",
+                                       MaMat4d(), nullptr));
 }
 
 //////////////////////////////////////////////////////////////////////////

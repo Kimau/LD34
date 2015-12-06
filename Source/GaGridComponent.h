@@ -38,9 +38,10 @@ class GaGridComponent : public ScnRenderableComponent {
   BcU32 NoofGridLines_ = 32;
 
   // Psybrus Bits
-  RsVertexDeclaration* pVertexDeclaration_ = nullptr;
-  RsBuffer* pUniformBuffer_;
-  RsBuffer* pVertexBuffer_;
+  RsVertexDeclarationUPtr pVertexDeclaration_ = nullptr;
+  RsBufferUPtr pUniformBuffer_;
+  RsBufferUPtr pVertexBuffer_;
+  RsGeometryBindingUPtr GeometryBinding_;
   ScnShaderObjectUniformBlockData ObjectUniforms_;
 
   // Materials.

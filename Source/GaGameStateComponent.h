@@ -5,6 +5,8 @@
 #include "System/Scene/ScnEntity.h"
 #include "System/Os/OsCore.h"
 
+#include "GaCameraComponent.h"
+
 //////////////////////////////////////////////////////////////////////////
 // GaExampleComponentRef
 typedef ReObjectRef<class GaGameStateComponent> GaGameStateComponentRef;
@@ -27,4 +29,5 @@ class GaGameStateComponent : public ScnComponent {
  private:
   BcU32 LevelNum_;
   ScnEntity* Cube_ = nullptr;
+  GaCameraComponent* Cam_;
 };

@@ -40,8 +40,10 @@ void GaStartStateComponent::onAttach(ScnEntityWeakRef Parent) {
   ScnCore::pImpl()->spawnEntity(ScnEntitySpawnParams(
       "CameraEntity_0", "default", "CameraEntity", MaMat4d(), Parent));
 
+  MaMat4d Transform;
+  Transform.translation(MaVec3d(0, -10.0f, 0));
   ScnCore::pImpl()->spawnEntity(ScnEntitySpawnParams(
-      "FloorEntity_0", "start", "FloorEntity", MaMat4d(), Parent));
+    "FloorGrid", "start", "FloorEntity", Transform, Parent));
 
   using namespace std::placeholders;
   OsCore::pImpl()->subscribe(

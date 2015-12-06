@@ -47,19 +47,20 @@ class GaCameraComponent : public ScnComponent {
 
   MaMat4d getCameraRotationMatrix() const;
 
- private:
+  // Variables
   MaVec3d CameraTarget_;
   MaVec3d CameraRotation_;
   MaVec3d CameraWalk_;
   BcF32 CameraDistance_;
   BcF32 CameraZoom_;
-
   MaVec3d CameraRotationDelta_;
 
   enum CameraState { STATE_IDLE = 0, STATE_ROTATE, STATE_PAN };
 
   CameraState CameraState_;
   CameraState NextCameraState_;
+
+private:
   OsEventInputMouse LastMouseEvent_;
   OsEventInputKeyboard LastKeyboardEvent_;
 };

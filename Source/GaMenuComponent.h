@@ -26,4 +26,5 @@ class GaMenuComponent : public ScnComponent {
   class ScnCanvasComponent* Canvas_;
   class ScnFontComponent* Font_;
   class ScnMaterialComponent* DefaultMaterial_;
+
 };

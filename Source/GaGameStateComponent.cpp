@@ -34,11 +34,31 @@ void GaGameStateComponent::onAttach(ScnEntityWeakRef Parent) {
   Super::onAttach(Parent);
 
   // Spawn Game Bits
-  ScnCore::pImpl()->spawnEntity(ScnEntitySpawnParams(
-      "CameraEntity_0", "default", "CameraEntity", MaMat4d(), Parent));
+  auto cam = ScnCore::pImpl()->spawnEntity(ScnEntitySpawnParams(
+    "CameraEntity_0", "default", "CameraEntity", MaMat4d(), Parent));
+  if (cam != nullptr) {
+    Cam_ = cam->getComponentByType<GaCameraComponent>();
+
+    Cam_->CameraTarget_ = MaVec3d(0.0f, -10.0f, 0.0f);
+    Cam_->CameraRotation_ = MaVec3d(0.6f, 0.1f, 0.0);
+    Cam_->CameraDistance_ = 25.0f;
+  }
 
   ScnCore::pImpl()->spawnEntity(ScnEntitySpawnParams(
-      "FloorGrid", "game", "FloorEntity", MaMat4d(), Parent));
+    "CubeEntity_0", "game", "CubeEntity", MaMat4d(), Parent));
+
+  {
+    MaMat4d Transform;
+    Transform.translation(MaVec3d(0, +3.0f, 0));
+
+    ScnCore::pImpl()->spawnEntity(ScnEntitySpawnParams(
+      "CubeEntity_0", "game", "CubeEntity", Transform, Parent));
+  }
+
+  MaMat4d Transform;
+  Transform.translation(MaVec3d(0, -10.0f, 0));
+  ScnCore::pImpl()->spawnEntity(ScnEntitySpawnParams(
+      "FloorGrid", "game", "FloorEntity", Transform, Parent));
 
   using namespace std::placeholders;
   OsCore::pImpl()->subscribe(

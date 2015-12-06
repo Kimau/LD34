@@ -132,18 +132,18 @@ void GaGridComponent::generateGrid() {
   BcF32 x = minPoint;
   for (BcU32 iX = 0; iX < NoofGridLines_; ++iX) {
     x += GridSize_;
-    *pCurr = GaGridComponentVertex{x, minPoint, 0, 1.0f, 0xFFFFFFFF};
+    *pCurr = GaGridComponentVertex{x, 0, minPoint, 1.0f, 0xFFFFFFFF};
     ++pCurr;
-    *pCurr = GaGridComponentVertex{x, maxPoint, 0, 1.0f, 0xFFFFFFFF};
+    *pCurr = GaGridComponentVertex{x, 0, maxPoint, 1.0f, 0xFFFFFFFF};
     ++pCurr;
   }
 
   BcF32 y = minPoint;
   for (BcU32 iY = 0; iY < NoofGridLines_; ++iY) {
     y += GridSize_;
-    *pCurr = GaGridComponentVertex{minPoint, y, 0, 1.0f, 0xFFFFFFFF};
+    *pCurr = GaGridComponentVertex{minPoint, 0, y, 1.0f, 0xFFFFFFFF};
     ++pCurr;
-    *pCurr = GaGridComponentVertex{maxPoint, y, 0, 1.0f, 0xFFFFFFFF};
+    *pCurr = GaGridComponentVertex{maxPoint, 0, y, 1.0f, 0xFFFFFFFF};
     ++pCurr;
   }
 }

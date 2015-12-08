@@ -28,7 +28,6 @@ class GaGameStateComponent : public ScnComponent {
 
   void returnToMenu();
 
-
  private:
   BcU32 LevelNum_;
   ScnEntity* Cube_ = nullptr;

@@ -106,33 +106,19 @@ void GaCameraComponent::preUpdate(BcF32 Tick) {
   ViewDistance = ViewDistance * CameraRotationMatrix;
   MaVec3d ViewFromPosition = CameraTarget_ + ViewDistance;
 
-  MaMat4d Matrix;
-  Matrix.lookAt(
+  MaMat4d camMat;
+  camMat.lookAt(
       ViewFromPosition, CameraTarget_,
       MaVec3d(CameraRotationMatrix.row1().x(), CameraRotationMatrix.row1().y(),
               CameraRotationMatrix.row1().z()));
-  Matrix.inverse();
-  // Matrix.rotation( MaVec3d( BcPIDIV2 - ( BcPI / 16.0f ), 0.0f, 0.0f ) );
-  // Matrix.translation( MaVec3d( 0.0f, -4.0f, -2.0f ) );
-  getParentEntity()->setLocalMatrix(Matrix);
+  camMat.inverse();
+  getParentEntity()->setLocalMatrix(camMat);
 
   CameraState_ = NextCameraState_;
 
   // clear event.
   BcMemZero(&LastMouseEvent_, sizeof(LastMouseEvent_));
 }
-
-/*
-template < typename _Callable >
-void testBindCallFunc( _Callable Bind )
-{
-using CallableParamType = typename BcFuncTraits< decltype(
-&_Callable::operator() ) >::param1_type;
-using ThisCallableFunc = std::function< eEvtReturn( EvtID, const
-CallableParamType& ) >;
-ThisCallableFunc CallableFunc( Bind );
-}
-*/
 
 //////////////////////////////////////////////////////////////////////////
 // onAttach

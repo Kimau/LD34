@@ -23,7 +23,9 @@ void GaMenuComponent::StaticRegisterClass() {
 //////////////////////////////////////////////////////////////////////////
 // Ctor
 GaMenuComponent::GaMenuComponent()
-    : Canvas_(nullptr), Font_(nullptr), DefaultMaterial_(nullptr) {}
+    : Canvas_(nullptr), Font_(nullptr), DefaultMaterial_(nullptr) {
+  SelectedItem_ = 0;
+}
 
 //////////////////////////////////////////////////////////////////////////
 // Dtor
@@ -82,8 +84,13 @@ void GaMenuComponent::update(BcF32 Tick) {
     MaVec2d tlBut = MaVec2d(tl.x() + padNum, step * i + padNum);
     MaVec2d brBut = MaVec2d(br.x() - padNum, step * (i + 1) - padNum);
 
-    Canvas_->drawBox(tlBut, brBut, RsColour::BLUE, baseLayer + 2);
-    Canvas_->drawLineBox(tlBut, brBut, RsColour::WHITE, baseLayer + 3);
+    if (i == SelectedItem_) {
+      Canvas_->drawBox(tlBut, brBut, RsColour::BLUE, baseLayer + 2);
+      Canvas_->drawLineBox(tlBut, brBut, RsColour::WHITE, baseLayer + 3);
+    } else {
+      Canvas_->drawBox(tlBut, brBut, RsColour::BLACK, baseLayer + 2);
+      Canvas_->drawLineBox(tlBut, brBut, RsColour::GRAY, baseLayer + 3);
+    }
   }
 
   // Draw Text
@@ -99,7 +106,14 @@ void GaMenuComponent::update(BcF32 Tick) {
   for (BcU16 i = 0; i < numBoxes; ++i) {
     MaVec2d tlBut = MaVec2d(tl.x() + padNum, step * i - padNum);
     MaVec2d brBut = MaVec2d(br.x() - padNum, step * (i + 1) + padNum);
-    Font_->drawText(Canvas_, DrawParams, tlBut, brBut - tlBut, "Button");
+
+    if (i == SelectedItem_) {
+      DrawParams.setTextColour(RsColour::WHITE);
+      Font_->drawText(Canvas_, DrawParams, tlBut, brBut - tlBut, "Button");
+    } else {
+      DrawParams.setTextColour(RsColour::GRAY);
+      Font_->drawText(Canvas_, DrawParams, tlBut, brBut - tlBut, "Button");
+    }
   }
   Canvas_->popMatrix();
 

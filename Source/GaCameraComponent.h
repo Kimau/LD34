@@ -60,7 +60,7 @@ class GaCameraComponent : public ScnComponent {
   CameraState CameraState_;
   CameraState NextCameraState_;
 
-private:
+ private:
   OsEventInputMouse LastMouseEvent_;
   OsEventInputKeyboard LastKeyboardEvent_;
 };

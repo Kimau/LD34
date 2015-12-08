@@ -22,9 +22,10 @@ class GaMenuComponent : public ScnComponent {
 
   virtual void update(BcF32 Tick);
 
+  BcU8 SelectedItem_;
+
  private:
   class ScnCanvasComponent* Canvas_;
   class ScnFontComponent* Font_;
   class ScnMaterialComponent* DefaultMaterial_;
-
 };

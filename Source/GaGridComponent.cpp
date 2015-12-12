@@ -29,7 +29,8 @@ void GaGridComponent::render(ScnRenderContext& RenderContext) {
   // Material
   {
     // Set model parameters on material.
-    ObjectUniforms_.WorldTransform_ = getParentEntity()->getWorldMatrix();
+    ObjectUniforms_.WorldTransform_ = getParentEntity()->getWorldMatrix() *
+                                      getParentEntity()->getLocalMatrix();
     RsCore::pImpl()->updateBuffer(
         pUniformBuffer_.get(), 0, sizeof(ObjectUniforms_),
         RsResourceUpdateFlags::ASYNC,
@@ -135,19 +136,23 @@ void GaGridComponent::generateGrid() {
 
   BcF32 x = minPoint;
   for (BcU32 iX = 0; iX < NoofGridLines_; ++iX) {
+    BcU32 col = 0xFFFFFFFF;
+
     x += GridSize_;
-    *pCurr = GaGridComponentVertex{x, 0, minPoint, 1.0f, 0xFFFFFFFF};
+    *pCurr = GaGridComponentVertex{x, 0, minPoint, 1.0f, col};
     ++pCurr;
-    *pCurr = GaGridComponentVertex{x, 0, maxPoint, 1.0f, 0xFFFFFFFF};
+    *pCurr = GaGridComponentVertex{x, 0, maxPoint, 1.0f, col};
     ++pCurr;
   }
 
   BcF32 y = minPoint;
   for (BcU32 iY = 0; iY < NoofGridLines_; ++iY) {
+    BcU32 col = 0xFFFFFFFF;
+
     y += GridSize_;
-    *pCurr = GaGridComponentVertex{minPoint, 0, y, 1.0f, 0xFFFFFFFF};
+    *pCurr = GaGridComponentVertex{minPoint, 0, y, 1.0f, col};
     ++pCurr;
-    *pCurr = GaGridComponentVertex{maxPoint, 0, y, 1.0f, 0xFFFFFFFF};
+    *pCurr = GaGridComponentVertex{maxPoint, 0, y, 1.0f, col};
     ++pCurr;
   }
 }

@@ -32,6 +32,8 @@ class GaGameStateComponent : public ScnComponent {
 
   void gameStart();
 
+  void updateFloorPosition(MaVec3d p, MaVec3d v);
+
   virtual void update(BcF32 Tick);
 
  private:
@@ -39,6 +41,7 @@ class GaGameStateComponent : public ScnComponent {
   std::vector<ScnEntity*> JunkVector_;
   GaCameraComponent* Cam_;
   GaRollingBallComponent* Ball_;
+  ScnEntity* FloorGrid_;
 
   BcU32 NoofJunk_ = 32;
   BcBool IsGameStarted_ = false;

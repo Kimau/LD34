@@ -29,15 +29,20 @@ class GaRollingBallComponent : public ScnComponent {
 
   const MaVec3d& pos() const { return Pos_; };
   const MaVec3d& vel() const { return Vel_; };
+  const BcF32& sz() const { return Size_; };
 
  private:
+  ScnEntity* CraneArm_;
+  ScnEntity* JunkBall_;
 
-   BcF32 InitialSize_;
-   BcF32 Size_;
-   MaVec3d TravelDir_;
+  BcF32 InitialSize_ = 2.0f;
+  BcF32 InitialSpeed_ = 10.0f;
 
-   MaVec3d Rot_;
-   MaVec3d Pos_;
-   MaVec3d RotVel_;
-   MaVec3d Vel_;
+  BcF32 Size_;
+  MaVec3d TravelDir_;
+
+  MaVec3d Rot_;
+  MaVec3d Pos_;
+  MaVec3d RotVel_;
+  MaVec3d Vel_;
 };

@@ -6,5 +6,3 @@ for %%v in (*.h) do clang-format -i -style=Google "%%v"
 echo "--------------- Formatted folders -----------------------------"
 cd ..
 echo on
-
-Deploy -t windows-vs-v140 -c debug

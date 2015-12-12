@@ -12,8 +12,9 @@ void GaGameStateComponent::StaticRegisterClass() {
                   bcRFF_IMPORTER),
   };
 
-  ReRegisterClass<GaGameStateComponent, Super>(Fields).addAttribute(new ScnComponentProcessor(
-  { ScnComponentProcessFuncEntry::Update<GaGameStateComponent>() }));
+  ReRegisterClass<GaGameStateComponent, Super>(Fields)
+      .addAttribute(new ScnComponentProcessor(
+          {ScnComponentProcessFuncEntry::Update<GaGameStateComponent>()}));
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -31,32 +32,35 @@ GaGameStateComponent::~GaGameStateComponent() {}
 void GaGameStateComponent::onAttach(ScnEntityWeakRef Parent) {
   Super::onAttach(Parent);
 
+  Cam_ = nullptr;
+  Ball_ = nullptr;
+  FloorGrid_ = nullptr;
+
   // Spawn Camera
-  auto camSpawn = ScnEntitySpawnParams(
-    "CameraEntity_0", "default", "CameraEntity", MaMat4d(), Parent);
+  auto camSpawn = ScnEntitySpawnParams("CameraEntity_0", "default",
+                                       "CameraEntity", MaMat4d(), Parent);
   camSpawn.OnSpawn_ = [this](ScnEntity* NewEntity) {
     Cam_ = NewEntity->getComponentByType<GaCameraComponent>();
 
-    Cam_->CameraTarget_ = MaVec3d(0.0f, -10.0f, 0.0f);
-    Cam_->CameraRotation_ = MaVec3d(0.6f, 0.1f, 0.0);
-    Cam_->CameraDistance_ = 25.0f;
   };
   ScnCore::pImpl()->spawnEntity(camSpawn);
 
-
   // Spawn Ball
-  auto ballSpawn = ScnEntitySpawnParams(
-    "TheBall", "game", "RollingBallEntity", MaMat4d(), Parent);
-    ballSpawn.OnSpawn_ = [this](ScnEntity* NewEntity) {
+  auto ballSpawn = ScnEntitySpawnParams("TheBall", "game", "RollingBallEntity",
+                                        MaMat4d(), Parent);
+  ballSpawn.OnSpawn_ = [this](ScnEntity* NewEntity) {
     Ball_ = NewEntity->getComponentByType<GaRollingBallComponent>();
   };
   ScnCore::pImpl()->spawnEntity(ballSpawn);
-  
+
   // Floor
   MaMat4d Transform;
   Transform.translation(MaVec3d(0, 0.0f, 0));
-  ScnCore::pImpl()->spawnEntity(ScnEntitySpawnParams(
-      "FloorGrid", "game", "FloorEntity", Transform, Parent));
+  auto floorSpawn = ScnEntitySpawnParams("FloorGrid", "game", "FloorEntity",
+                                         Transform, Parent);
+  floorSpawn.OnSpawn_ =
+      [this](ScnEntity* NewEntity) { FloorGrid_ = NewEntity; };
+  ScnCore::pImpl()->spawnEntity(floorSpawn);
 
   using namespace std::placeholders;
   OsCore::pImpl()->subscribe(
@@ -111,8 +115,7 @@ void GaGameStateComponent::returnToMenu() {
                                        MaMat4d(), nullptr));
 }
 
-void GaGameStateComponent::gameStart()
-{
+void GaGameStateComponent::gameStart() {
   RandObj_ = BcRandom(BcRandom::Global.rand());
 
   // Clear Junk
@@ -122,47 +125,62 @@ void GaGameStateComponent::gameStart()
     ParentEntity_->detach(j);
   }
 
+  // Reset Ball
   Ball_->ResetBall();
+  auto v = Ball_->vel();
+  auto p = Ball_->pos();
+  auto ax = v.cross(MaVec3d(0.0f, 1.0f, 0.0f)).normal();
 
+  // Setup Camera
+  Cam_->CameraTarget_ = p + v;
+  Cam_->CameraRotation_ = MaVec3d(1.3f, 1.61f, 0.0f);
+  Cam_->CameraDistance_ = 75.0f;
 
-
+  // Setup Floor
+  updateFloorPosition(p, v);
   IsGameStarted_ = true;
 }
 
-void GaGameStateComponent::update(BcF32 Tick)
-{
-  // Check we have bits we need
-  if ((Cam_ == nullptr) || (Ball_ == nullptr))
-      return;
+void GaGameStateComponent::updateFloorPosition(MaVec3d p, MaVec3d v) {
+  MaVec3d gridMid = p + v * 10;
+  MaMat4d m;
+  m.translation(MaVec3d(gridMid.x() - fmodf(gridMid.x(), 16.0f), 0,
+                        gridMid.z() - fmodf(gridMid.z(), 16.0f)));
+  FloorGrid_->setLocalMatrix(m);
+}
 
-  if (IsGameStarted_ == false)
-    gameStart();
+void GaGameStateComponent::update(BcF32 Tick) {
+  // Check we have bits we need
+  if ((Cam_ == nullptr) || (Ball_ == nullptr)) return;
+
+  if (IsGameStarted_ == false) gameStart();
+
+  // Get Ball Details
+  auto v = Ball_->vel();
+  auto p = Ball_->pos();
+  auto ax = v.cross(MaVec3d(0.0f, 1.0f, 0.0f)).normal();
 
   // Spawn Junk
   {
-    auto v = Ball_->vel();
-    auto p = Ball_->pos();
-    auto ax = v.cross(MaVec3d(0.0f, 1.0f, 0.0f)).normal();
-    
     while (JunkVector_.size() < NoofJunk_) {
       MaMat4d m;
-      m.translation(p + 
-        v * RandObj_.randRealRange(+5.0f, +15.0f) + // Ahead
-        ax * RandObj_.randRealRange(-30.0f, +30.0f)); // To the side
+      m.translation(p + v * RandObj_.randRealRange(+5.0f, +15.0f) +  // Ahead
+                    ax *
+                        RandObj_.randRealRange(-30.0f, +30.0f));  // To the side
 
       // auto sz = RandObj_.randRealRange(0.2f, 3.0f);
-      
+
       auto j = ScnCore::pImpl()->spawnEntity(ScnEntitySpawnParams(
-        "JunkPiece_00", "game", "CubeEntity", m, ParentEntity_));
+          "JunkPiece_00", "game", "CubeEntity", m, ParentEntity_));
 
       JunkVector_.push_back(j);
     }
-    
   }
 
   // Camera Follow Ball
-  Cam_->CameraTarget_ = Ball_->pos();
+  Cam_->CameraTarget_ = p + v * 2.0f;
 
+  updateFloorPosition(p, v);
 }
 
 //////////////////////////////////////////////////////////////////////////

@@ -59,14 +59,46 @@
           "$Class": "GaRollingBallComponent",
           "type": "GaRollingBallComponent",
 
-          "initialsize": 5.0
-        },
+          "initialsize": 6.0,
+          "initialspeed": 15.0
+        }
+      ]
+    },
 
+    // ----- Rolling Ball Middle ----
+   {
+      "name": "JunkBallEntity",
+      "type": "ScnEntity",
+
+      "components": [
         {
           "type": "GaRollingBallRenderComponent",
           "material": "$(ScnMaterial:materials.test)"
         }
       ]
+    },
+
+    // ----- Crane Arm ----
+   {
+      "name": "CraneArmEntity",
+      "type": "ScnEntity",
+
+      "components": [
+       {
+         "type": "ScnModelComponent",         
+         "model": "$(ScnModel:this.crane_model)",          
+         "scale": "1.0, 1.0, 1.0"        
+       }
+      ]
+    },
+
+    {
+      "type": "ScnModel",
+      "name": "crane_model",
+      "source": "Content/Source/crane.fbx",
+      "materials": {
+        "(.*)": "$(ScnMaterial:materials.test)"
+      }
     },
 
     // ----- Cube Object ----
@@ -79,7 +111,7 @@
         "type": "ScnPhysicsBoxCollisionComponent",
         "size": "2.0, 2.0, 2.0"
       },
-      
+
        {
          "type": "ScnModelComponent",         
          "model": "$(ScnModel:this.cube_model)",          

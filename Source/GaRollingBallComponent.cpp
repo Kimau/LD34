@@ -152,3 +152,7 @@ void GaRollingBallComponent::update(BcF32 Tick) {
 
   UpdateMatrix();
 }
+
+void GaRollingBallComponent::eatJunk(GaJunkComponent* junk) {
+  Size_ += junk->sz();
+}

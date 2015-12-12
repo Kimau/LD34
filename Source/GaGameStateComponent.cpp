@@ -1,6 +1,7 @@
 
 
 #include "GaGameStateComponent.h"
+#include "GaJunkComponent.h"
 #include "System/Scene/Rendering/ScnDebugRenderComponent.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -147,6 +148,12 @@ void GaGameStateComponent::update(BcF32 Tick) {
       ScnDebugRenderComponent::pImpl()->drawCircle(
           result.Intersection_, MaVec3d(1.0f, 1.0f, 1.0f),
           RsColour(1.0f, 0.0f, 0.0f, 1.0f));
+
+      GaJunkComponent* j =
+          result.Entity_->getComponentByType<GaJunkComponent>();
+      Ball_->eatJunk(j);
+      JunkVector_.remove(result.Entity_);
+      ParentEntity_->detach(result.Entity_);
     }
   }
 

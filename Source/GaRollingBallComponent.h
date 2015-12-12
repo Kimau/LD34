@@ -3,6 +3,7 @@
 #include "Psybrus.h"
 
 #include "System/Scene/ScnEntity.h"
+#include "GaJunkComponent.h"
 
 //////////////////////////////////////////////////////////////////////////
 // GaExampleComponentRef
@@ -33,6 +34,7 @@ class GaRollingBallComponent : public ScnComponent {
 
   const BcBool isShooting() { return IsShooting_; }
   const MaVec3d getRay() { return ShootRay_; }
+  void eatJunk(GaJunkComponent* junk);
 
   const MaVec3d& pos() const { return Pos_; };
   const MaVec3d& vel() const { return Vel_; };

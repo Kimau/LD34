@@ -39,7 +39,7 @@ class GaGameStateComponent : public ScnComponent {
 
  private:
   BcU32 LevelNum_;
-  std::vector<ScnEntity*> JunkVector_;
+  std::list<ScnEntity*> JunkVector_;
   GaCameraComponent* Cam_;
   GaRollingBallComponent* Ball_;
   ScnPhysicsWorldComponent* World_;

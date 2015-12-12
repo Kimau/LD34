@@ -45,7 +45,7 @@ class GaGameStateComponent : public ScnComponent {
   ScnPhysicsWorldComponent* World_;
   ScnEntity* FloorGrid_;
 
-  BcU32 NoofJunk_ = 32;
+  BcU32 NoofJunk_ = 1;  // 32;
   BcBool IsGameStarted_ = false;
   BcRandom RandObj_;
 };

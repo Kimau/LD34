@@ -123,7 +123,7 @@ void GaGameStateComponent::gameStart() {
 }
 
 void GaGameStateComponent::updateFloorPosition(MaVec3d p, MaVec3d v) {
-  MaVec3d gridMid = p + v * 10;
+  MaVec3d gridMid = p;  // +v * 10;
   MaMat4d m;
   m.translation(MaVec3d(gridMid.x() - fmodf(gridMid.x(), 16.0f), 0,
                         gridMid.z() - fmodf(gridMid.z(), 16.0f)));
@@ -157,16 +157,35 @@ void GaGameStateComponent::update(BcF32 Tick) {
     }
   }
 
-  // Spawn Junk
+  // Junk Update
   {
+    std::list<ScnEntity*> DelVector;
+    for (auto j : JunkVector_) {
+      auto jp = j->getWorldPosition();
+      auto jdir = jp - p;
+
+      if (jdir.dot(v) < -100.0f) {
+        DelVector.push_back(j);
+      }
+    }
+
+    for (auto j : DelVector) {
+      JunkVector_.remove(j);
+      ParentEntity_->detach(j);
+    }
+
     while (JunkVector_.size() < NoofJunk_) {
       MaMat4d m;
       m.translation(p + v * RandObj_.randRealRange(+5.0f, +15.0f) +  // Ahead
                     ax *
                         RandObj_.randRealRange(-30.0f, +30.0f));  // To the side
 
+      static BcU32 jCounter = 0;
+      BcChar buf[130];
+      BcSPrintf(buf, 128, "JunkPiece_%d", jCounter++);
       auto j = ScnCore::pImpl()->spawnEntity(ScnEntitySpawnParams(
-          "JunkPiece_00", "game", "JunkEntity", m, ParentEntity_));
+
+          buf, "game", "JunkEntity", m, ParentEntity_));
 
       JunkVector_.push_back(j);
     }

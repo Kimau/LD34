@@ -89,6 +89,8 @@
 #include "GaGameStateComponent.h"
 #include "GaGridComponent.h"
 #include "GaMenuComponent.h"
+#include "GaRollingBallComponent.h"
+#include "GaRollingBallRenderComponent.h"
 #include "GaStartStateComponent.h"
 void AutoGenRegisterReflection()
 {
@@ -209,5 +211,7 @@ void AutoGenRegisterReflection()
 	GaGameStateComponent::StaticRegisterClass();
 	GaGridComponent::StaticRegisterClass();
 	GaMenuComponent::StaticRegisterClass();
+	GaRollingBallComponent::StaticRegisterClass();
+	GaRollingBallRenderComponent::StaticRegisterClass();
 	GaStartStateComponent::StaticRegisterClass();
 }

@@ -167,24 +167,20 @@ eEvtReturn GaStartStateComponent::onKeyUp(EvtID ID, const EvtBaseEvent& Event) {
     case 'S':
     case OsEventInputKeyboard::KEYCODE_DOWN:
       break;
-    case OsEventInputKeyboard::KEYCODE_PGUP:
-      {
-        // Hack for now
-        GaMenuComponent* menu = getComponentByType<GaMenuComponent>();
-        if (menu != nullptr) {
-          menu->SelectedItem_ = (menu->SelectedItem_ + 4 - 1) % 4;
-        }
+    case OsEventInputKeyboard::KEYCODE_PGUP: {
+      // Hack for now
+      GaMenuComponent* menu = getComponentByType<GaMenuComponent>();
+      if (menu != nullptr) {
+        menu->SelectedItem_ = (menu->SelectedItem_ + 4 - 1) % 4;
       }
-        break;
-    case OsEventInputKeyboard::KEYCODE_PGDN:
-      {
-        // Hack for now
-        GaMenuComponent* menu = getComponentByType<GaMenuComponent>();
-        if (menu != nullptr) {
-          menu->SelectedItem_ = (menu->SelectedItem_ + 4 +1) % 4;
-        }
+    } break;
+    case OsEventInputKeyboard::KEYCODE_PGDN: {
+      // Hack for now
+      GaMenuComponent* menu = getComponentByType<GaMenuComponent>();
+      if (menu != nullptr) {
+        menu->SelectedItem_ = (menu->SelectedItem_ + 4 + 1) % 4;
       }
-        break;
+    } break;
     case OsEventInputKeyboard::KEYCODE_RETURN:
       advanceToGame();
       break;

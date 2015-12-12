@@ -46,6 +46,9 @@ void GaGameStateComponent::onAttach(ScnEntityWeakRef Parent) {
   }
 
   ScnCore::pImpl()->spawnEntity(ScnEntitySpawnParams(
+    "TheBall", "game", "RollingBallEntity", MaMat4d(), Parent));
+
+  ScnCore::pImpl()->spawnEntity(ScnEntitySpawnParams(
       "CubeEntity_0", "game", "CubeEntity", MaMat4d(), Parent));
 
   {

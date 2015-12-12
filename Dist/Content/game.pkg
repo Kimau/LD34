@@ -1,6 +1,6 @@
 {
   "resources": [
-   // ----- STATE ENTITY ------------
+  // ----- STATE ENTITY ------------
   {
       "name": "GameEntity",
       "type": "ScnEntity",
@@ -45,6 +45,31 @@
           "material": "$(ScnMaterial:materials.default)",
           "gridsize": 16.0
         }
+      ]
+    },
+
+    // ----- Rolling Ball Entity ----
+    {
+      "name": "RollingBallEntity",
+      "type": "ScnEntity",
+
+      "components": [
+      {
+        "type": "ScnPhysicsSphereCollisionComponent",
+        "size": "2.0, 2.0, 2.0"
+      },
+
+      {
+          "$Class": "GaRollingBallComponent",
+          "type": "GaRollingBallComponent",
+
+          "initialsize" : 5.0
+        },
+
+       {
+         "type": "GaRollingBallRenderComponent",         
+         "material": "$(ScnMaterial:materials.test)"
+       }
       ]
     },
 

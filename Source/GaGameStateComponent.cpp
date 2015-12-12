@@ -83,30 +83,6 @@ void GaGameStateComponent::onDetach(ScnEntityWeakRef Parent) {
   OsCore::pImpl()->unsubscribeAll(this);
 }
 
-//////////////////////////////////////////////////////////////////////////
-// onKeyDown
-eEvtReturn GaGameStateComponent::onKeyDown(EvtID ID,
-                                           const EvtBaseEvent& Event) {
-  const auto& KeyboardEvent = Event.get<OsEventInputKeyboard>();
-
-  switch (KeyboardEvent.KeyCode_) {
-    case 'A':
-    case OsEventInputKeyboard::KEYCODE_LEFT:
-      break;
-    case 'D':
-    case OsEventInputKeyboard::KEYCODE_RIGHT:
-      break;
-    case 'W':
-    case OsEventInputKeyboard::KEYCODE_UP:
-      break;
-    case 'S':
-    case OsEventInputKeyboard::KEYCODE_DOWN:
-      break;
-  }
-
-  return evtRET_PASS;
-}
-
 void GaGameStateComponent::returnToMenu() {
   //
   auto sc = ScnCore::pImpl();
@@ -168,8 +144,6 @@ void GaGameStateComponent::update(BcF32 Tick) {
                     ax *
                         RandObj_.randRealRange(-30.0f, +30.0f));  // To the side
 
-      // auto sz = RandObj_.randRealRange(0.2f, 3.0f);
-
       auto j = ScnCore::pImpl()->spawnEntity(ScnEntitySpawnParams(
           "JunkPiece_00", "game", "CubeEntity", m, ParentEntity_));
 
@@ -184,6 +158,26 @@ void GaGameStateComponent::update(BcF32 Tick) {
 }
 
 //////////////////////////////////////////////////////////////////////////
+// onKeyDown
+eEvtReturn GaGameStateComponent::onKeyDown(EvtID ID,
+                                           const EvtBaseEvent& Event) {
+  const auto& KeyboardEvent = Event.get<OsEventInputKeyboard>();
+
+  switch (KeyboardEvent.KeyCode_) {
+    case 'A':
+    case OsEventInputKeyboard::KEYCODE_LEFT:
+      Ball_->leftOn();
+      break;
+    case 'D':
+    case OsEventInputKeyboard::KEYCODE_RIGHT:
+      Ball_->rightOn();
+      break;
+  }
+
+  return evtRET_PASS;
+}
+
+//////////////////////////////////////////////////////////////////////////
 // onKeyUp
 eEvtReturn GaGameStateComponent::onKeyUp(EvtID ID, const EvtBaseEvent& Event) {
   const auto& KeyboardEvent = Event.get<OsEventInputKeyboard>();
@@ -191,10 +185,11 @@ eEvtReturn GaGameStateComponent::onKeyUp(EvtID ID, const EvtBaseEvent& Event) {
   switch (KeyboardEvent.KeyCode_) {
     case 'A':
     case OsEventInputKeyboard::KEYCODE_LEFT:
-
+      Ball_->leftOff();
       break;
     case 'D':
     case OsEventInputKeyboard::KEYCODE_RIGHT:
+      Ball_->rightOff();
       break;
     case 'W':
     case OsEventInputKeyboard::KEYCODE_UP:

@@ -1,5 +1,7 @@
 #include "GaRollingBallComponent.h"
 
+#include "System/Scene/Rendering/ScnDebugRenderComponent.h"
+
 //////////////////////////////////////////////////////////////////////////
 // Define resource internals.
 REFLECTION_DEFINE_DERIVED(GaRollingBallComponent);
@@ -10,6 +12,9 @@ void GaRollingBallComponent::StaticRegisterClass() {
                   bcRFF_IMPORTER),
       new ReField("InitialSpeed_", &GaRollingBallComponent::InitialSpeed_,
                   bcRFF_IMPORTER),
+      new ReField("CraneArmRotSpeed_",
+                  &GaRollingBallComponent::CraneArmRotSpeed_, bcRFF_IMPORTER),
+
   };
 
   ReRegisterClass<GaRollingBallComponent, Super>(Fields)
@@ -63,6 +68,8 @@ void GaRollingBallComponent::ResetBall() {
   Pos_ = MaVec3d(0, 0, 0);
   Vel_ = TravelDir_ * InitialSpeed_;
   RotVel_ = MaVec3d(0, -1.0f, 0.0f).cross(TravelDir_).normal() * 1.0f;
+
+  CraneArmRot_ = 0.0f;
 }
 
 void GaRollingBallComponent::UpdateMatrix() {
@@ -75,9 +82,13 @@ void GaRollingBallComponent::UpdateMatrix() {
 
   // Set Crane Arm
   {
+    MaMat4d caMat;
     MaMat4d mTrans;
     mTrans.translation(TravelDir_ * Size_);
-    CraneArm_->setLocalMatrix(mTrans);
+    caMat.rotation(MaVec3d(0.0f, -CraneArmRot_, 0.0f));
+
+    caMat = mTrans * caMat;
+    CraneArm_->setLocalMatrix(caMat);
   }
 
   // Set Junk Ball
@@ -108,6 +119,29 @@ void GaRollingBallComponent::update(BcF32 Tick) {
     ResetBall();
   }
 
+  // Move Crane Arm
+  if (Left_ && Right_) {
+    // Shoot Crane Arm
+    MaMat4d caMat;
+    caMat.rotation(MaVec3d(0.0f, -CraneArmRot_, 0.0f));
+    MaVec3d dirVec = MaVec3d(1.0f, 0.0f, 0.0f) * caMat;
+    ScnDebugRenderComponent::pImpl()->drawLine(
+        ParentEntity_->getWorldPosition(),
+        ParentEntity_->getWorldPosition() + dirVec * 100.0f,
+        RsColour(1.0f, 0.0f, 0.0f, 1.0f));
+  } else if (Left_) {
+    CraneArmRotCurrSpeed_ =
+        BcLerp(CraneArmRotCurrSpeed_, CraneArmRotSpeed_, Tick);
+    CraneArmRot_ -= CraneArmRotCurrSpeed_ * Tick;
+  } else if (Right_) {
+    CraneArmRotCurrSpeed_ =
+        BcLerp(CraneArmRotCurrSpeed_, CraneArmRotSpeed_, Tick);
+    CraneArmRot_ += CraneArmRotCurrSpeed_ * Tick;
+  } else {
+    CraneArmRotCurrSpeed_ = 0.0f;
+  }
+
+  // Move Ball
   Pos_ += Vel_ * Tick;
   Pos_ -= MaVec3d(0.0f, Pos_.y() - Size_, 0.0f);
   Rot_ += RotVel_ * (Vel_.magnitude() / Size_) * Tick;

@@ -27,6 +27,11 @@ class GaRollingBallComponent : public ScnComponent {
 
   virtual void update(BcF32 Tick);
 
+  void leftOn() { Left_ = BcTrue; }
+  void leftOff() { Left_ = BcFalse; }
+  void rightOn() { Right_ = BcTrue; }
+  void rightOff() { Right_ = BcFalse; }
+
   const MaVec3d& pos() const { return Pos_; };
   const MaVec3d& vel() const { return Vel_; };
   const BcF32& sz() const { return Size_; };
@@ -34,6 +39,12 @@ class GaRollingBallComponent : public ScnComponent {
  private:
   ScnEntity* CraneArm_;
   ScnEntity* JunkBall_;
+
+  BcBool Left_ = BcFalse;
+  BcBool Right_ = BcFalse;
+  BcF32 CraneArmRot_ = 0.0f;
+  BcF32 CraneArmRotCurrSpeed_ = 0.0f;
+  BcF32 CraneArmRotSpeed_ = 5.0f;
 
   BcF32 InitialSize_ = 2.0f;
   BcF32 InitialSpeed_ = 10.0f;

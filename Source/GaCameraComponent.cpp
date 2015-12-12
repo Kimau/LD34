@@ -143,14 +143,14 @@ void GaCameraComponent::onAttach(ScnEntityWeakRef Parent) {
   OsCore::pImpl()->subscribe(
       osEVT_INPUT_MOUSEWHEEL, this,
       std::bind(&GaCameraComponent::onMouseWheel, this, _1, _2));
-
+  /*
   OsCore::pImpl()->subscribe(
       osEVT_INPUT_KEYDOWN, this,
       std::bind(&GaCameraComponent::onKeyDown, this, _1, _2));
 
   OsCore::pImpl()->subscribe(
       osEVT_INPUT_KEYUP, this,
-      std::bind(&GaCameraComponent::onKeyUp, this, _1, _2));
+      std::bind(&GaCameraComponent::onKeyUp, this, _1, _2));*/
 }
 
 //////////////////////////////////////////////////////////////////////////

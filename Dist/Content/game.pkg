@@ -53,10 +53,7 @@
       "name": "RollingBallEntity",
       "type": "ScnEntity",
 
-      "components": [{
-          "type": "ScnPhysicsSphereCollisionComponent",
-          "size": "2.0, 2.0, 2.0"
-        },
+      "components": [
 
         {
           "$Class": "GaRollingBallComponent",
@@ -73,26 +70,31 @@
     },
 
     // ----- Cube Object ----
-    {
+   {
       "name": "CubeEntity",
       "type": "ScnEntity",
 
       "components": [
-
       {
-          "type": "ScnPhysicsBoxCollisionComponent",
-          "size": "2.0, 2.0, 2.0"
-        },
-
-        {
-          "type": "ScnModel",
-          "name": "cube_model",
-          "source": "Content/Source/cube.fbx",
-          "materials": {
-            "(.*)": "$(ScnMaterial:materials.test)"
-          }
-        }
+        "type": "ScnPhysicsBoxCollisionComponent",
+        "size": "2.0, 2.0, 2.0"
+      },
+      
+       {
+         "type": "ScnModelComponent",         
+         "model": "$(ScnModel:this.cube_model)",          
+         "scale": "1.0, 1.0, 1.0"        
+       }
       ]
+    },
+
+    {
+      "type": "ScnModel",
+      "name": "cube_model",
+      "source": "Content/Source/cube.fbx",
+      "materials": {
+        "(.*)": "$(ScnMaterial:materials.test)"
+      }
     }
   ]
 }

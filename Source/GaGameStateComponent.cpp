@@ -124,6 +124,8 @@ void GaGameStateComponent::gameStart()
 
   Ball_->ResetBall();
 
+
+
   IsGameStarted_ = true;
 }
 
@@ -145,17 +147,17 @@ void GaGameStateComponent::update(BcF32 Tick)
     while (JunkVector_.size() < NoofJunk_) {
       MaMat4d m;
       m.translation(p + 
-        v * 10.0f + // Ahead
-        ax * RandObj_.randRealRange(-10.0f, +10.0f)); // To the side
+        v * RandObj_.randRealRange(+5.0f, +15.0f) + // Ahead
+        ax * RandObj_.randRealRange(-30.0f, +30.0f)); // To the side
 
-      auto sz = RandObj_.randRealRange(0.2f, 3.0f);
-      m.scale(MaVec3d(sz, sz, sz));
+      // auto sz = RandObj_.randRealRange(0.2f, 3.0f);
       
       auto j = ScnCore::pImpl()->spawnEntity(ScnEntitySpawnParams(
         "JunkPiece_00", "game", "CubeEntity", m, ParentEntity_));
 
       JunkVector_.push_back(j);
     }
+    
   }
 
   // Camera Follow Ball

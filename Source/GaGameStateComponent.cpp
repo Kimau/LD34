@@ -12,10 +12,8 @@ void GaGameStateComponent::StaticRegisterClass() {
                   bcRFF_IMPORTER),
   };
 
-  ReRegisterClass<GaGameStateComponent, Super>(Fields)
-      .addAttribute(new ScnComponentProcessor({
-          // ScnComponentProcessFuncEntry::PreUpdate<GaGameStateComponent>()
-      }));
+  ReRegisterClass<GaGameStateComponent, Super>(Fields).addAttribute(new ScnComponentProcessor(
+  { ScnComponentProcessFuncEntry::Update<GaGameStateComponent>() }));
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -33,34 +31,29 @@ GaGameStateComponent::~GaGameStateComponent() {}
 void GaGameStateComponent::onAttach(ScnEntityWeakRef Parent) {
   Super::onAttach(Parent);
 
-  // Spawn Game Bits
-  auto cam = ScnCore::pImpl()->spawnEntity(ScnEntitySpawnParams(
-      "CameraEntity_0", "default", "CameraEntity", MaMat4d(), Parent));
-
-  if (cam != nullptr) {
-    Cam_ = cam->getComponentByType<GaCameraComponent>();
+  // Spawn Camera
+  auto camSpawn = ScnEntitySpawnParams(
+    "CameraEntity_0", "default", "CameraEntity", MaMat4d(), Parent);
+  camSpawn.OnSpawn_ = [this](ScnEntity* NewEntity) {
+    Cam_ = NewEntity->getComponentByType<GaCameraComponent>();
 
     Cam_->CameraTarget_ = MaVec3d(0.0f, -10.0f, 0.0f);
     Cam_->CameraRotation_ = MaVec3d(0.6f, 0.1f, 0.0);
     Cam_->CameraDistance_ = 25.0f;
-  }
+  };
+  ScnCore::pImpl()->spawnEntity(camSpawn);
 
-  ScnCore::pImpl()->spawnEntity(ScnEntitySpawnParams(
-    "TheBall", "game", "RollingBallEntity", MaMat4d(), Parent));
 
-  ScnCore::pImpl()->spawnEntity(ScnEntitySpawnParams(
-      "CubeEntity_0", "game", "CubeEntity", MaMat4d(), Parent));
-
-  {
-    MaMat4d Transform;
-    Transform.translation(MaVec3d(0, +3.0f, 0));
-
-    ScnCore::pImpl()->spawnEntity(ScnEntitySpawnParams(
-        "CubeEntity_0", "game", "CubeEntity", Transform, Parent));
-  }
-
+  // Spawn Ball
+  auto ballSpawn = ScnEntitySpawnParams(
+    "TheBall", "game", "RollingBallEntity", MaMat4d(), Parent);
+    ballSpawn.OnSpawn_ = [this](ScnEntity* NewEntity) {
+    Ball_ = NewEntity->getComponentByType<GaRollingBallComponent>();
+  };
+  ScnCore::pImpl()->spawnEntity(ballSpawn);
+  
   MaMat4d Transform;
-  Transform.translation(MaVec3d(0, -10.0f, 0));
+  Transform.translation(MaVec3d(0, 0.0f, 0));
   ScnCore::pImpl()->spawnEntity(ScnEntitySpawnParams(
       "FloorGrid", "game", "FloorEntity", Transform, Parent));
 
@@ -114,6 +107,17 @@ void GaGameStateComponent::returnToMenu() {
   sc->removeEntity(getParentEntity());
   sc->spawnEntity(ScnEntitySpawnParams("StartStateE", "start", "StartEntity",
                                        MaMat4d(), nullptr));
+}
+
+void GaGameStateComponent::update(BcF32 Tick)
+{
+  // Check we have bits we need
+  if ((Cam_ == nullptr) || (Ball_ == nullptr))
+      return;
+
+  // Camera Follow Ball
+  Cam_->CameraTarget_ = Ball_->pos();
+
 }
 
 //////////////////////////////////////////////////////////////////////////

@@ -6,6 +6,7 @@
 #include "System/Os/OsCore.h"
 
 #include "GaCameraComponent.h"
+#include "GaRollingBallComponent.h"
 
 //////////////////////////////////////////////////////////////////////////
 // GaExampleComponentRef
@@ -28,8 +29,11 @@ class GaGameStateComponent : public ScnComponent {
 
   void returnToMenu();
 
+  virtual void update(BcF32 Tick);
+
  private:
   BcU32 LevelNum_;
   ScnEntity* Cube_ = nullptr;
   GaCameraComponent* Cam_;
+  GaRollingBallComponent* Ball_;
 };

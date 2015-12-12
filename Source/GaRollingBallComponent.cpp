@@ -35,16 +35,22 @@ void GaRollingBallComponent::onAttach(ScnEntityWeakRef Parent) {
     InitialSize_ = 2.0f;
   }
 
-  Size_ = InitialSize_;
-  TravelDir_ = MaVec3d(1.0f, 0.0f, 0.0f);
-  
-  Rot_ = MaVec3d(0, 0, 0);
-  Pos_ = MaVec3d(0, 0, 0);
-  Vel_ = TravelDir_;
-  RotVel_ = MaVec3d(0, -1.0f, 0.0f).cross(TravelDir_) * 1.0f;
+  ResetBall();
+
   
   UpdateMatrix();
 
+}
+
+void GaRollingBallComponent::ResetBall()
+{
+  Size_ = InitialSize_;
+  TravelDir_ = MaVec3d(1.0f, 0.0f, 0.0f);
+
+  Rot_ = MaVec3d(0, 0, 0);
+  Pos_ = MaVec3d(0, 0, 0);
+  Vel_ = TravelDir_ * 10.0f;
+  RotVel_ = MaVec3d(0, -1.0f, 0.0f).cross(TravelDir_) * 1.0f;
 }
 
 void GaRollingBallComponent::UpdateMatrix()
@@ -56,7 +62,7 @@ void GaRollingBallComponent::UpdateMatrix()
   mRot.rotation(Rot_);
 
   m.identity();
-  //m.scale(MaVec3d(Size_, Size_, Size_));
+  m.scale(MaVec3d(Size_, Size_, Size_));
 
   m = m * mRot * mTrans;
 
@@ -76,8 +82,14 @@ void GaRollingBallComponent::onDetach(ScnEntityWeakRef Parent) {
 void GaRollingBallComponent::update(BcF32 Tick) {
 
   // Update Details
+  Size_ -= 0.5f * Tick;
+  if (Size_ < 0.1f) {
+    ResetBall();
+  }
+
   Pos_ += Vel_ * Tick;
-  Rot_ += RotVel_ * Tick;
+  Pos_ -= MaVec3d(0.0f, Pos_.y() - Size_, 0.0f);
+  Rot_ += RotVel_ * (Vel_.magnitude() / Size_) * Tick;
 
   UpdateMatrix();
 }

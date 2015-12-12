@@ -19,11 +19,15 @@ class GaRollingBallComponent : public ScnComponent {
 
   virtual void onAttach(ScnEntityWeakRef Parent);
 
+  void ResetBall();
+
   void UpdateMatrix();
 
   virtual void onDetach(ScnEntityWeakRef Parent);
 
   virtual void update(BcF32 Tick);
+
+  const MaVec3d& pos() const { return Pos_; };
 
  private:
 

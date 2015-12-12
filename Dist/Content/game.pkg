@@ -38,7 +38,7 @@
           "linearsleepingthreshold": 0.1,
           "angularsleepingthreshold": 0.1
         },
-        
+
         {
           "$Class": "GaGridComponent",
           "type": "GaGridComponent",
@@ -53,23 +53,22 @@
       "name": "RollingBallEntity",
       "type": "ScnEntity",
 
-      "components": [
-      {
-        "type": "ScnPhysicsSphereCollisionComponent",
-        "size": "2.0, 2.0, 2.0"
-      },
+      "components": [{
+          "type": "ScnPhysicsSphereCollisionComponent",
+          "size": "2.0, 2.0, 2.0"
+        },
 
-      {
+        {
           "$Class": "GaRollingBallComponent",
           "type": "GaRollingBallComponent",
 
-          "initialsize" : 5.0
+          "initialsize": 5.0
         },
 
-       {
-         "type": "GaRollingBallRenderComponent",         
-         "material": "$(ScnMaterial:materials.test)"
-       }
+        {
+          "type": "GaRollingBallRenderComponent",
+          "material": "$(ScnMaterial:materials.test)"
+        }
       ]
     },
 
@@ -79,36 +78,21 @@
       "type": "ScnEntity",
 
       "components": [
-      {
-        "type": "ScnPhysicsBoxCollisionComponent",
-        "size": "2.0, 2.0, 2.0"
-      },
 
       {
-        "type": "ScnPhysicsRigidBodyComponent",
+          "type": "ScnPhysicsBoxCollisionComponent",
+          "size": "2.0, 2.0, 2.0"
+        },
 
-        "mass": 1.0,
-        "friction": 1.0,
-        "rollingfriction": 1.0,
-        "restitution": 0.8,
-        "linearsleepingthreshold": 0.1,
-        "angularsleepingthreshold": 0.1
-      },     
-       {
-         "type": "ScnModelComponent",         
-         "model": "$(ScnModel:this.cube_model)",          
-         "scale": "1.0, 1.0, 1.0"        
-       }
+        {
+          "type": "ScnModel",
+          "name": "cube_model",
+          "source": "Content/Source/cube.fbx",
+          "materials": {
+            "(.*)": "$(ScnMaterial:materials.test)"
+          }
+        }
       ]
-    },
-
-    {
-      "type": "ScnModel",
-      "name": "cube_model",
-      "source": "Content/Source/cube.fbx",
-      "materials": {
-        "(.*)": "$(ScnMaterial:materials.test)"
-      }
     }
   ]
 }

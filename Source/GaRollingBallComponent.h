@@ -28,6 +28,7 @@ class GaRollingBallComponent : public ScnComponent {
   virtual void update(BcF32 Tick);
 
   const MaVec3d& pos() const { return Pos_; };
+  const MaVec3d& vel() const { return Vel_; };
 
  private:
 

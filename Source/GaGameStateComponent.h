@@ -2,6 +2,7 @@
 
 #include "Psybrus.h"
 
+#include "Base/BcRandom.h"
 #include "System/Scene/ScnEntity.h"
 #include "System/Os/OsCore.h"
 
@@ -29,11 +30,17 @@ class GaGameStateComponent : public ScnComponent {
 
   void returnToMenu();
 
+  void gameStart();
+
   virtual void update(BcF32 Tick);
 
  private:
   BcU32 LevelNum_;
-  ScnEntity* Cube_ = nullptr;
+  std::vector<ScnEntity*> JunkVector_;
   GaCameraComponent* Cam_;
   GaRollingBallComponent* Ball_;
+
+  BcU32 NoofJunk_ = 32;
+  BcBool IsGameStarted_ = false;
+  BcRandom RandObj_;
 };

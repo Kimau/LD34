@@ -1,4 +1,4 @@
-#include "Base/BcRandom.h"
+
 
 #include "GaGameStateComponent.h"
 
@@ -52,6 +52,7 @@ void GaGameStateComponent::onAttach(ScnEntityWeakRef Parent) {
   };
   ScnCore::pImpl()->spawnEntity(ballSpawn);
   
+  // Floor
   MaMat4d Transform;
   Transform.translation(MaVec3d(0, 0.0f, 0));
   ScnCore::pImpl()->spawnEntity(ScnEntitySpawnParams(
@@ -65,6 +66,8 @@ void GaGameStateComponent::onAttach(ScnEntityWeakRef Parent) {
   OsCore::pImpl()->subscribe(
       osEVT_INPUT_KEYUP, this,
       std::bind(&GaGameStateComponent::onKeyUp, this, _1, _2));
+
+  IsGameStarted_ = false;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -72,7 +75,6 @@ void GaGameStateComponent::onAttach(ScnEntityWeakRef Parent) {
 // virtual
 void GaGameStateComponent::onDetach(ScnEntityWeakRef Parent) {
   Super::onDetach(Parent);
-  Cube_ = nullptr;
 
   OsCore::pImpl()->unsubscribeAll(this);
 }
@@ -109,11 +111,52 @@ void GaGameStateComponent::returnToMenu() {
                                        MaMat4d(), nullptr));
 }
 
+void GaGameStateComponent::gameStart()
+{
+  RandObj_ = BcRandom(BcRandom::Global.rand());
+
+  // Clear Junk
+  while (JunkVector_.empty() == false) {
+    auto j = JunkVector_.back();
+    JunkVector_.pop_back();
+    ParentEntity_->detach(j);
+  }
+
+  Ball_->ResetBall();
+
+  IsGameStarted_ = true;
+}
+
 void GaGameStateComponent::update(BcF32 Tick)
 {
   // Check we have bits we need
   if ((Cam_ == nullptr) || (Ball_ == nullptr))
       return;
+
+  if (IsGameStarted_ == false)
+    gameStart();
+
+  // Spawn Junk
+  {
+    auto v = Ball_->vel();
+    auto p = Ball_->pos();
+    auto ax = v.cross(MaVec3d(0.0f, 1.0f, 0.0f)).normal();
+    
+    while (JunkVector_.size() < NoofJunk_) {
+      MaMat4d m;
+      m.translation(p + 
+        v * 10.0f + // Ahead
+        ax * RandObj_.randRealRange(-10.0f, +10.0f)); // To the side
+
+      auto sz = RandObj_.randRealRange(0.2f, 3.0f);
+      m.scale(MaVec3d(sz, sz, sz));
+      
+      auto j = ScnCore::pImpl()->spawnEntity(ScnEntitySpawnParams(
+        "JunkPiece_00", "game", "CubeEntity", m, ParentEntity_));
+
+      JunkVector_.push_back(j);
+    }
+  }
 
   // Camera Follow Ball
   Cam_->CameraTarget_ = Ball_->pos();
@@ -138,6 +181,10 @@ eEvtReturn GaGameStateComponent::onKeyUp(EvtID ID, const EvtBaseEvent& Event) {
       break;
     case 'S':
     case OsEventInputKeyboard::KEYCODE_DOWN:
+      break;
+
+    case 'R':
+      gameStart();
       break;
 
     case OsEventInputKeyboard::KEYCODE_ESCAPE:

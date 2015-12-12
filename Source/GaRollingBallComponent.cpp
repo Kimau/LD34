@@ -50,7 +50,7 @@ void GaRollingBallComponent::ResetBall()
   Rot_ = MaVec3d(0, 0, 0);
   Pos_ = MaVec3d(0, 0, 0);
   Vel_ = TravelDir_ * 10.0f;
-  RotVel_ = MaVec3d(0, -1.0f, 0.0f).cross(TravelDir_) * 1.0f;
+  RotVel_ = MaVec3d(0, -1.0f, 0.0f).cross(TravelDir_).normal() * 1.0f;
 }
 
 void GaRollingBallComponent::UpdateMatrix()

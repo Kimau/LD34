@@ -1,6 +1,7 @@
 
 
 #include "GaGameStateComponent.h"
+#include "System/Scene/Rendering/ScnDebugRenderComponent.h"
 
 //////////////////////////////////////////////////////////////////////////
 // Define resource internals.
@@ -71,6 +72,9 @@ void GaGameStateComponent::onAttach(ScnEntityWeakRef Parent) {
       osEVT_INPUT_KEYUP, this,
       std::bind(&GaGameStateComponent::onKeyUp, this, _1, _2));
 
+  // Physics World
+  World_ = getComponentByType<ScnPhysicsWorldComponent>();
+
   IsGameStarted_ = false;
 }
 
@@ -136,6 +140,16 @@ void GaGameStateComponent::update(BcF32 Tick) {
   auto p = Ball_->pos();
   auto ax = v.cross(MaVec3d(0.0f, 1.0f, 0.0f)).normal();
 
+  //
+  if (Ball_->isShooting()) {
+    ScnPhysicsLineCastResult result;
+    if (World_->lineCast(p, p + Ball_->getRay() * 100.0f, &result) == BcTrue) {
+      ScnDebugRenderComponent::pImpl()->drawCircle(
+          result.Intersection_, MaVec3d(1.0f, 1.0f, 1.0f),
+          RsColour(1.0f, 0.0f, 0.0f, 1.0f));
+    }
+  }
+
   // Spawn Junk
   {
     while (JunkVector_.size() < NoofJunk_) {
@@ -145,7 +159,7 @@ void GaGameStateComponent::update(BcF32 Tick) {
                         RandObj_.randRealRange(-30.0f, +30.0f));  // To the side
 
       auto j = ScnCore::pImpl()->spawnEntity(ScnEntitySpawnParams(
-          "JunkPiece_00", "game", "CubeEntity", m, ParentEntity_));
+          "JunkPiece_00", "game", "JunkEntity", m, ParentEntity_));
 
       JunkVector_.push_back(j);
     }

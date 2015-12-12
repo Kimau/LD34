@@ -4,6 +4,7 @@
 
 #include "Base/BcRandom.h"
 #include "System/Scene/ScnEntity.h"
+#include "system/Scene/Physics/ScnPhysicsWorldComponent.h"
 #include "System/Os/OsCore.h"
 
 #include "GaCameraComponent.h"
@@ -41,6 +42,7 @@ class GaGameStateComponent : public ScnComponent {
   std::vector<ScnEntity*> JunkVector_;
   GaCameraComponent* Cam_;
   GaRollingBallComponent* Ball_;
+  ScnPhysicsWorldComponent* World_;
   ScnEntity* FloorGrid_;
 
   BcU32 NoofJunk_ = 32;

@@ -101,6 +101,52 @@
       }
     },
 
+     // ----- Junk Object ----
+   {
+      "name": "JunkEntity",
+      "type": "ScnEntity",
+
+      "components": [
+    {
+          "$Class": "GaJunkComponent",
+          "type": "GaJunkComponent",
+
+          "initialsize": 3.0,
+          "initialspeed": 4.0
+        },
+
+      {
+        "type": "ScnPhysicsBoxCollisionComponent",
+        "size": "2.0, 6.0, 2.0"
+      },
+
+
+        {
+          "type": "ScnPhysicsRigidBodyComponent",
+
+          "mass": 0.0,
+          "friction": 1.0,
+          "rollingfriction": 1.0,
+          "restitution": 0.8,
+          "linearsleepingthreshold": 0.1,
+          "angularsleepingthreshold": 0.1
+        }
+      ]
+    },
+
+    {
+      "name": "JunkModelEntity",
+      "type": "ScnEntity",
+
+      "components": [
+       {
+         "type": "ScnModelComponent",         
+         "model": "$(ScnModel:this.cube_model)",          
+         "scale": "1.0, 1.0, 1.0"        
+       }
+      ]
+    },
+
     // ----- Cube Object ----
    {
       "name": "CubeEntity",
@@ -111,6 +157,18 @@
         "type": "ScnPhysicsBoxCollisionComponent",
         "size": "2.0, 2.0, 2.0"
       },
+
+
+        {
+          "type": "ScnPhysicsRigidBodyComponent",
+
+          "mass": 0.0,
+          "friction": 1.0,
+          "rollingfriction": 1.0,
+          "restitution": 0.8,
+          "linearsleepingthreshold": 0.1,
+          "angularsleepingthreshold": 0.1
+        },
 
        {
          "type": "ScnModelComponent",         

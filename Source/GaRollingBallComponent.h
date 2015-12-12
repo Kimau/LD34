@@ -24,13 +24,15 @@ class GaRollingBallComponent : public ScnComponent {
   void UpdateMatrix();
 
   virtual void onDetach(ScnEntityWeakRef Parent);
-
   virtual void update(BcF32 Tick);
 
   void leftOn() { Left_ = BcTrue; }
   void leftOff() { Left_ = BcFalse; }
   void rightOn() { Right_ = BcTrue; }
   void rightOff() { Right_ = BcFalse; }
+
+  const BcBool isShooting() { return IsShooting_; }
+  const MaVec3d getRay() { return ShootRay_; }
 
   const MaVec3d& pos() const { return Pos_; };
   const MaVec3d& vel() const { return Vel_; };
@@ -40,6 +42,8 @@ class GaRollingBallComponent : public ScnComponent {
   ScnEntity* CraneArm_;
   ScnEntity* JunkBall_;
 
+  BcBool IsShooting_ = BcFalse;
+  MaVec3d ShootRay_;
   BcBool Left_ = BcFalse;
   BcBool Right_ = BcFalse;
   BcF32 CraneArmRot_ = 0.0f;

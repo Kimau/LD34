@@ -120,6 +120,7 @@ void GaRollingBallComponent::update(BcF32 Tick) {
   }
 
   // Move Crane Arm
+  IsShooting_ = BcFalse;
   if (Left_ && Right_) {
     // Shoot Crane Arm
     MaMat4d caMat;
@@ -129,6 +130,9 @@ void GaRollingBallComponent::update(BcF32 Tick) {
         ParentEntity_->getWorldPosition(),
         ParentEntity_->getWorldPosition() + dirVec * 100.0f,
         RsColour(1.0f, 0.0f, 0.0f, 1.0f));
+
+    ShootRay_ = dirVec;
+    IsShooting_ = BcTrue;
   } else if (Left_) {
     CraneArmRotCurrSpeed_ =
         BcLerp(CraneArmRotCurrSpeed_, CraneArmRotSpeed_, Tick);
@@ -143,7 +147,7 @@ void GaRollingBallComponent::update(BcF32 Tick) {
 
   // Move Ball
   Pos_ += Vel_ * Tick;
-  Pos_ -= MaVec3d(0.0f, Pos_.y() - Size_, 0.0f);
+  Pos_ = MaVec3d(Pos_.x(), Size_ * 0.5f, Pos_.z());
   Rot_ += RotVel_ * (Vel_.magnitude() / Size_) * Tick;
 
   UpdateMatrix();

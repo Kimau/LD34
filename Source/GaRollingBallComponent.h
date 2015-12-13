@@ -32,6 +32,7 @@ class GaRollingBallComponent : public ScnComponent {
   void rightOn() { Right_ = BcTrue; }
   void rightOff() { Right_ = BcFalse; }
 
+  const BcBool IsAiming() { return IsAiming_; }
   const BcBool isShooting() { return IsShooting_; }
   const MaVec3d getRay() { return ShootRay_; }
   void eatJunk(GaJunkComponent* junk);
@@ -45,6 +46,7 @@ class GaRollingBallComponent : public ScnComponent {
   ScnEntity* JunkBall_;
 
   BcBool IsShooting_ = BcFalse;
+  BcBool IsAiming_ = BcFalse;
   MaVec3d ShootRay_;
   BcBool Left_ = BcFalse;
   BcBool Right_ = BcFalse;

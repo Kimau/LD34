@@ -45,7 +45,8 @@
           "type": "GaRollingBallComponent",
 
           "initialsize": 6.0,
-          "initialspeed": 15.0
+          "initialspeed": 15.0,
+          "cranearmrotspeed": 300.0
         }
       ]
     },

@@ -40,8 +40,7 @@ void GaGridComponent::render(ScnRenderContext& RenderContext) {
   // Material
   {
     // Set model parameters on material.
-    ObjectUniforms_.WorldTransform_ = getParentEntity()->getWorldMatrix() *
-                                      getParentEntity()->getLocalMatrix();
+    ObjectUniforms_.WorldTransform_ = getParentEntity()->getWorldMatrix();
     RsCore::pImpl()->updateBuffer(
         pUniformBuffer_.get(), 0, sizeof(ObjectUniforms_),
         RsResourceUpdateFlags::ASYNC,

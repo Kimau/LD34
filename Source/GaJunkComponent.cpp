@@ -2,7 +2,7 @@
 
 #include "System/Scene/Rendering/ScnDebugRenderComponent.h"
 
-#include "System/SysKernel.h"
+#include "GaGameTimer.h"
 
 //////////////////////////////////////////////////////////////////////////
 // Define resource internals.
@@ -70,7 +70,7 @@ void GaJunkComponent::onDetach(ScnEntityWeakRef Parent) {
 }
 
 void GaJunkComponent::updateJunk(const ScnComponentList& Components) {
-  BcF32 Tick = SysKernel::pImpl()->getFrameTime();
+  BcF32 Tick = GaGameTimer::pImpl()->Tick();
 
   for (auto Component : Components) {
     BcAssert(Component->isTypeOf<GaJunkComponent>());

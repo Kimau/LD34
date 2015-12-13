@@ -2,6 +2,7 @@
 
 #include "GaGameStateComponent.h"
 #include "GaJunkComponent.h"
+#include "GaGameTimer.h"
 #include "System/Scene/Rendering/ScnDebugRenderComponent.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -128,7 +129,7 @@ void GaGameStateComponent::updateFloorPosition(MaVec3d p, MaVec3d v) {
   MaMat4d m;
   m.translation(MaVec3d(gridMid.x() - fmodf(gridMid.x(), 16.0f), 0,
                         gridMid.z() - fmodf(gridMid.z(), 16.0f)));
-  FloorGrid_->setLocalMatrix(m);
+  FloorGrid_->setWorldMatrix(m);
 }
 
 void GaGameStateComponent::update(BcF32 Tick) {
@@ -137,6 +138,8 @@ void GaGameStateComponent::update(BcF32 Tick) {
 
   if (IsGameStarted_ == false) gameStart();
 
+  Tick = GaGameTimer::pImpl()->Tick();
+
   // Get Ball Details
   auto v = Ball_->vel();
   auto p = Ball_->pos();
@@ -144,6 +147,8 @@ void GaGameStateComponent::update(BcF32 Tick) {
 
   //
   if (Ball_->isShooting()) {
+    GaGameTimer::pImpl()->SetMulti(0.3f);
+
     ScnPhysicsLineCastResult result;
     if (World_->lineCast(p, p + Ball_->getRay() * 100.0f, &result) == BcTrue) {
       ScnDebugRenderComponent::pImpl()->drawCircle(
@@ -156,6 +161,12 @@ void GaGameStateComponent::update(BcF32 Tick) {
       JunkVector_.remove(result.Entity_);
       ParentEntity_->detach(result.Entity_);
     }
+  }
+  else if (Ball_->IsAiming()) {
+    GaGameTimer::pImpl()->SetMulti(0.1f);
+  }
+  else {
+    GaGameTimer::pImpl()->SetMulti(1.0f);
   }
 
   // Junk Update
@@ -192,10 +203,45 @@ void GaGameStateComponent::update(BcF32 Tick) {
     }
   }
 
-  // Camera Follow Ball
-  Cam_->CameraTarget_ = p + v * 2.0f;
+  // Camera Update
+  UpdateCameraLogic();
 
   updateFloorPosition(p, v);
+}
+
+void GaGameStateComponent::UpdateCameraLogic()
+{
+  auto v = Ball_->vel();
+  auto p = Ball_->pos();
+
+  auto ax = v.cross(MaVec3d(0.0f, 1.0f, 0.0f)).normal();
+  auto sz = Ball_->sz();
+
+  if (Ball_->isShooting()) {
+    // Aiming Camera
+    Cam_->NextCameraState_ = Cam_->CameraState_ = GaCameraComponent::STATE_IDLE;
+
+    Cam_->CameraTarget_ = p + v;
+    Cam_->CameraRotation_ = MaVec3d(1.3f, 1.61f, 0.0f);
+    Cam_->CameraDistance_ = 50.0f;
+  }
+  else if (Ball_->IsAiming()) {
+    // Aiming Camera
+    Cam_->NextCameraState_ = Cam_->CameraState_ = GaCameraComponent::STATE_IDLE;
+
+    Cam_->CameraTarget_ = p + v;
+    Cam_->CameraRotation_ = MaVec3d(1.3f, 1.61f, 0.0f);
+    Cam_->CameraDistance_ = 75.0f;
+  }
+  else {
+    // Normal Camera
+    Cam_->NextCameraState_ = Cam_->CameraState_ = GaCameraComponent::STATE_FORCED;
+    Cam_->CameraForcedPosition_ = p + MaVec3d(0.0f, sz*2.0f, 0.0f) - v;
+    Cam_->CameraTarget_ = p + v * 5.0f;
+ }
+  
+  
+
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -214,6 +260,8 @@ eEvtReturn GaGameStateComponent::onKeyDown(EvtID ID,
       Ball_->rightOn();
       break;
   }
+
+  
 
   return evtRET_PASS;
 }

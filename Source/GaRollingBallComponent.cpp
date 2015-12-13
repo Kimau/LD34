@@ -1,5 +1,6 @@
 #include "GaRollingBallComponent.h"
 #include "GaRollingBallRenderComponent.h"
+#include "GaGameTimer.h"
 
 #include "System/Scene/Rendering/ScnDebugRenderComponent.h"
 
@@ -113,7 +114,9 @@ void GaRollingBallComponent::onDetach(ScnEntityWeakRef Parent) {
 //////////////////////////////////////////////////////////////////////////
 // update
 // virtual
-void GaRollingBallComponent::update(BcF32 Tick) {
+void GaRollingBallComponent::update(BcF32 DONOTUSETick) {
+  BcF32 Tick = GaGameTimer::pImpl()->Tick();
+
   // Update Details
   Size_ -= 0.5f * Tick;
   if (Size_ < 0.1f) {
@@ -125,6 +128,7 @@ void GaRollingBallComponent::update(BcF32 Tick) {
 
   // Move Crane Arm
   IsShooting_ = BcFalse;
+  IsAiming_ = BcFalse;
   if (Left_ && Right_) {
     // Shoot Crane Arm
     MaMat4d caMat;
@@ -138,12 +142,14 @@ void GaRollingBallComponent::update(BcF32 Tick) {
     ShootRay_ = dirVec;
     IsShooting_ = BcTrue;
   } else if (Left_) {
+    IsAiming_ = BcTrue;
     CraneArmRotCurrSpeed_ =
-        BcLerp(CraneArmRotCurrSpeed_, CraneArmRotSpeed_, Tick);
+        BcLerp(CraneArmRotCurrSpeed_, CraneArmRotSpeed_, Tick*0.5f);
     CraneArmRot_ -= CraneArmRotCurrSpeed_ * Tick;
   } else if (Right_) {
+    IsAiming_ = BcTrue;
     CraneArmRotCurrSpeed_ =
-        BcLerp(CraneArmRotCurrSpeed_, CraneArmRotSpeed_, Tick);
+        BcLerp(CraneArmRotCurrSpeed_, CraneArmRotSpeed_, Tick*0.5f);
     CraneArmRot_ += CraneArmRotCurrSpeed_ * Tick;
   } else {
     CraneArmRotCurrSpeed_ = 0.0f;

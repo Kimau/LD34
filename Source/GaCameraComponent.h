@@ -48,6 +48,7 @@ class GaCameraComponent : public ScnComponent {
   MaMat4d getCameraRotationMatrix() const;
 
   // Variables
+  MaVec3d CameraForcedPosition_;
   MaVec3d CameraTarget_;
   MaVec3d CameraRotation_;
   MaVec3d CameraWalk_;
@@ -55,7 +56,7 @@ class GaCameraComponent : public ScnComponent {
   BcF32 CameraZoom_;
   MaVec3d CameraRotationDelta_;
 
-  enum CameraState { STATE_IDLE = 0, STATE_ROTATE, STATE_PAN };
+  enum CameraState { STATE_IDLE = 0, STATE_ROTATE, STATE_PAN, STATE_FORCED };
 
   CameraState CameraState_;
   CameraState NextCameraState_;

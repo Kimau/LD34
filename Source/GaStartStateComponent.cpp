@@ -1,5 +1,6 @@
 
 #include "GaStartStateComponent.h"
+#include "GaGameTimer.h"
 
 #include "System/Os/OsCore.h"
 
@@ -144,6 +145,8 @@ void GaStartStateComponent::advanceToGame() {
 }
 
 void GaStartStateComponent::update(BcF32 Tick) {
+  Tick = GaGameTimer::pImpl()->Tick();
+
   if (ViewComp_ == nullptr) {
     ViewComp_ = ParentEntity_->getComponentByType<ScnViewComponent>();
   }

@@ -37,6 +37,8 @@ class GaGameStateComponent : public ScnComponent {
 
   virtual void update(BcF32 Tick);
 
+  void UpdateCameraLogic();
+
  private:
   BcU32 LevelNum_;
   std::list<ScnEntity*> JunkVector_;

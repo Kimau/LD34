@@ -63,40 +63,38 @@ void GaCameraComponent::preUpdate(BcF32 Tick) {
   MaMat4d camMat;
   if (CameraState_ == STATE_FORCED) {
     // Hard Hack for Camera
-    camMat.lookAt(
-      CameraForcedPosition_, CameraTarget_, MaVec3d(0.0f, 1.0f, 0.0f));
+    camMat.lookAt(CameraForcedPosition_, CameraTarget_,
+                  MaVec3d(0.0f, 1.0f, 0.0f));
     camMat.inverse();
-  } else
-  {
-
+  } else {
 #if PLATFORM_ANDROID
     CameraRotation_ += MaVec3d(0.0f, 0.05f, 0.0f) * Tick;
 #endif
 
     // Update state.
     switch (CameraState_) {
-    case STATE_IDLE: {
-      OsCore::pImpl()->getClient(0)->setMouseLock(BcFalse);
-    } break;
+      case STATE_IDLE: {
+        OsCore::pImpl()->getClient(0)->setMouseLock(BcFalse);
+      } break;
 
-    case STATE_ROTATE: {
-      OsCore::pImpl()->getClient(0)->setMouseLock(BcTrue);
-      BcF32 RotateSpeed = 0.25f;
-      CameraRotation_ +=
-        MaVec3d(LastMouseEvent_.MouseDY_, LastMouseEvent_.MouseDX_, 0.0f) *
-        RotateSpeed * Tick;
-    } break;
+      case STATE_ROTATE: {
+        OsCore::pImpl()->getClient(0)->setMouseLock(BcTrue);
+        BcF32 RotateSpeed = 0.25f;
+        CameraRotation_ +=
+            MaVec3d(LastMouseEvent_.MouseDY_, LastMouseEvent_.MouseDX_, 0.0f) *
+            RotateSpeed * Tick;
+      } break;
 
-    case STATE_PAN: {
-      OsCore::pImpl()->getClient(0)->setMouseLock(BcTrue);
+      case STATE_PAN: {
+        OsCore::pImpl()->getClient(0)->setMouseLock(BcTrue);
 
-      BcF32 PanSpeed = 4.0f;
-      MaMat4d CameraRotationMatrix = getCameraRotationMatrix();
-      MaVec3d OffsetVector =
-        MaVec3d(LastMouseEvent_.MouseDX_, LastMouseEvent_.MouseDY_, 0.0f) *
-        CameraRotationMatrix;
-      CameraTarget_ += OffsetVector * Tick * PanSpeed;
-    } break;
+        BcF32 PanSpeed = 4.0f;
+        MaMat4d CameraRotationMatrix = getCameraRotationMatrix();
+        MaVec3d OffsetVector =
+            MaVec3d(LastMouseEvent_.MouseDX_, LastMouseEvent_.MouseDY_, 0.0f) *
+            CameraRotationMatrix;
+        CameraTarget_ += OffsetVector * Tick * PanSpeed;
+      } break;
     }
 
     // Keyboard rotation.
@@ -115,15 +113,12 @@ void GaCameraComponent::preUpdate(BcF32 Tick) {
     ViewDistance = ViewDistance * CameraRotationMatrix;
     MaVec3d ViewFromPosition = CameraTarget_ + ViewDistance;
 
-    
-    camMat.lookAt(
-      ViewFromPosition, CameraTarget_,
-      MaVec3d(CameraRotationMatrix.row1().x(), CameraRotationMatrix.row1().y(),
-        CameraRotationMatrix.row1().z()));
+    camMat.lookAt(ViewFromPosition, CameraTarget_,
+                  MaVec3d(CameraRotationMatrix.row1().x(),
+                          CameraRotationMatrix.row1().y(),
+                          CameraRotationMatrix.row1().z()));
     camMat.inverse();
   }
-
-
 
   getParentEntity()->setLocalMatrix(camMat);
 
@@ -156,7 +151,7 @@ void GaCameraComponent::onAttach(ScnEntityWeakRef Parent) {
   OsCore::pImpl()->subscribe(
       osEVT_INPUT_MOUSEWHEEL, this,
       std::bind(&GaCameraComponent::onMouseWheel, this, _1, _2));
-  
+
   OsCore::pImpl()->subscribe(
       osEVT_INPUT_KEYDOWN, this,
       std::bind(&GaCameraComponent::onKeyDown, this, _1, _2));

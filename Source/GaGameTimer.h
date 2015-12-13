@@ -8,7 +8,6 @@
 // GaState
 class GaGameTimer : public BcGlobal<GaGameTimer> {
  public:
-
   GaGameTimer();
   virtual ~GaGameTimer();
 

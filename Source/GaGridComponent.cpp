@@ -146,9 +146,9 @@ void GaGridComponent::generateGrid() {
     BcU32 col = 0xFFFFFFFF;
 
     x += GridSize_;
-    *pCurr = GaGridComponentVertex{x, 0, minPoint, 1.0f, col};
+    *pCurr = GaGridComponentVertex{x, 0, minPoint + GridSize_, 1.0f, col};
     ++pCurr;
-    *pCurr = GaGridComponentVertex{x, 0, maxPoint, 1.0f, col};
+    *pCurr = GaGridComponentVertex{x, 0, maxPoint - GridSize_, 1.0f, col};
     ++pCurr;
   }
 
@@ -157,9 +157,9 @@ void GaGridComponent::generateGrid() {
     BcU32 col = 0xFFFFFFFF;
 
     y += GridSize_;
-    *pCurr = GaGridComponentVertex{minPoint, 0, y, 1.0f, col};
+    *pCurr = GaGridComponentVertex{minPoint + GridSize_, 0, y, 1.0f, col};
     ++pCurr;
-    *pCurr = GaGridComponentVertex{maxPoint, 0, y, 1.0f, col};
+    *pCurr = GaGridComponentVertex{maxPoint - GridSize_, 0, y, 1.0f, col};
     ++pCurr;
   }
 }

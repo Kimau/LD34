@@ -46,6 +46,30 @@
 			}
 		},
 
+
+		{
+			"type"			: "ScnTexture",
+			"name"			: "dirtball",
+			"source"		: "Content/Source/dirtball.png",
+			"spread"		: 32,
+
+			"@(pc)"	: {
+				"format" : "DXT1"
+			},
+
+			"@(android)" : {
+				"format" : "ETC1",
+
+				"@(tegra)" : {
+					"format" : "DXT1"
+				}
+			},
+
+			"@(html5)" : {
+				"format" : "DXT1"
+			}
+		},
+
 		////////////////////////////////////////////////////////////////////////
 		// Render target + depth stencil target
 		{

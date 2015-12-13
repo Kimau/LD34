@@ -12,7 +12,7 @@
         {
           "type": "ScnPhysicsWorldComponent",
           "gravity": "0.0, -9.8, 0.0",
-          "debugdrawworld": false
+          "debugdrawworld": true
         }
 
       ]
@@ -102,8 +102,8 @@
         },
 
       {
-        "type": "ScnPhysicsBoxCollisionComponent",
-        "size": "2.0, 6.0, 2.0"
+        "type": "ScnPhysicsSphereCollisionComponent",
+        "radius": "1.0"
       },
 
 
@@ -127,10 +127,20 @@
       "components": [
        {
          "type": "ScnModelComponent",         
-         "model": "$(ScnModel:this.cube_model)",          
+         "model": "$(ScnModel:this.ball_model)",          
          "scale": "1.0, 1.0, 1.0"        
        }
       ]
+    },
+
+
+    {
+      "type": "ScnModel",
+      "name": "ball_model",
+      "source": "Content/Source/ball.fbx",
+      "materials": {
+        "(.*)": "$(ScnMaterial:materials.dirtball)"
+      }
     },
 
     // ----- Cube Object ----

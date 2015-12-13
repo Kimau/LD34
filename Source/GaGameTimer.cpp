@@ -2,11 +2,7 @@
 #include "GaGameTimer.h"
 #include "System/SysKernel.h"
 
-
-GaGameTimer::GaGameTimer()
-{
-
-}
+GaGameTimer::GaGameTimer() {}
 
 GaGameTimer::~GaGameTimer() {}
 

@@ -33,6 +33,8 @@ class GaGameStateComponent : public ScnComponent {
 
   void gameStart();
 
+  void SpawnJunk(MaVec3d spawnPos, MaVec3d spawnDir, BcF32 spawnSize);
+
   void updateFloorPosition(MaVec3d p, MaVec3d v);
 
   virtual void update(BcF32 Tick);

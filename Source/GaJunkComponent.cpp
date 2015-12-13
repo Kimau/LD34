@@ -1,6 +1,7 @@
 #include "GaJunkComponent.h"
 
 #include "System/Scene/Rendering/ScnDebugRenderComponent.h"
+#include "System/Scene/Physics/ScnPhysicsSphereCollisionComponent.h"
 
 #include "GaGameTimer.h"
 
@@ -51,15 +52,20 @@ void GaJunkComponent::onAttach(ScnEntityWeakRef Parent) {
   ScnCore::pImpl()->spawnEntity(ballSpawn);
 
   // Get Details
+  /*
   auto mat = Parent->getLocalMatrix();
   Size_ = mat.row3().w();
-
   TravelDir_ = MaVec3d(-1.0f, 0.0f, 0.0f);
   Rot_ = MaVec3d(0, 0, 0);
-  Vel_ = TravelDir_ * InitialSpeed_;
-  RotVel_ = MaVec3d(0, -1.0f, 0.0f).cross(TravelDir_).normal() * 1.0f;
+  */
 
+  Vel_ = TravelDir_ * InitialSpeed_;
   RBody_ = Parent->getComponentByType<ScnPhysicsRigidBodyComponent>();
+  RBody_->lockOnY();
+
+  auto colShape =
+      Parent->getComponentByType<ScnPhysicsSphereCollisionComponent>();
+  colShape->setRadius(Size_);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -71,6 +77,8 @@ void GaJunkComponent::onDetach(ScnEntityWeakRef Parent) {
 
 void GaJunkComponent::updateJunk(const ScnComponentList& Components) {
   BcF32 Tick = GaGameTimer::pImpl()->Tick();
+
+  MaVec3d downVec = MaVec3d(0, -1.0f, 0.0f);
 
   for (auto Component : Components) {
     BcAssert(Component->isTypeOf<GaJunkComponent>());
@@ -85,11 +93,17 @@ void GaJunkComponent::updateJunk(const ScnComponentList& Components) {
       junkComp->RBody_->setTransform(trans);
     }
 
-    junkComp->Rot_ += junkComp->RotVel_ *
-                      (junkComp->Vel_.magnitude() / junkComp->Size_) * Tick;
+    MaVec3d rotVel = downVec.cross(junkComp->TravelDir_).normal() * 1.0f;
+    junkComp->Rot_ +=
+        rotVel * (junkComp->Vel_.magnitude() / junkComp->Size_) * Tick;
 
+    MaMat4d jbMat;
     MaMat4d mRot;
+    MaMat4d moveUpMat;
+    moveUpMat.translation(MaVec3d(0.0f, junkComp->Size_, 0.0f));
     mRot.rotation(junkComp->Rot_);
-    junkComp->JunkModel_->setLocalMatrix(mRot);
+    jbMat.scale(MaVec3d(junkComp->Size_, junkComp->Size_, junkComp->Size_));
+    jbMat = jbMat * mRot * moveUpMat;
+    junkComp->JunkModel_->setLocalMatrix(jbMat);
   }
 }

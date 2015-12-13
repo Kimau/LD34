@@ -144,12 +144,12 @@ void GaRollingBallComponent::update(BcF32 DONOTUSETick) {
   } else if (Left_) {
     IsAiming_ = BcTrue;
     CraneArmRotCurrSpeed_ =
-        BcLerp(CraneArmRotCurrSpeed_, CraneArmRotSpeed_, Tick*0.5f);
+        BcLerp(CraneArmRotCurrSpeed_, CraneArmRotSpeed_, Tick * 0.5f);
     CraneArmRot_ -= CraneArmRotCurrSpeed_ * Tick;
   } else if (Right_) {
     IsAiming_ = BcTrue;
     CraneArmRotCurrSpeed_ =
-        BcLerp(CraneArmRotCurrSpeed_, CraneArmRotSpeed_, Tick*0.5f);
+        BcLerp(CraneArmRotCurrSpeed_, CraneArmRotSpeed_, Tick * 0.5f);
     CraneArmRot_ += CraneArmRotCurrSpeed_ * Tick;
   } else {
     CraneArmRotCurrSpeed_ = 0.0f;

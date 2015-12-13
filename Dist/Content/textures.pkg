@@ -46,6 +46,54 @@
 			}
 		},
 
+				{
+			"type"			: "ScnTexture",
+			"name"			: "playerball",
+			"source"		: "Content/Source/playerball.png",
+			"spread"		: 32,
+
+			"@(pc)"	: {
+				"format" : "DXT1"
+			},
+
+			"@(android)" : {
+				"format" : "ETC1",
+
+				"@(tegra)" : {
+					"format" : "DXT1"
+				}
+			},
+
+			"@(html5)" : {
+				"format" : "DXT1"
+			}
+		},
+
+				{
+			"type"			: "ScnTexture",
+			"name"			: "crane",
+			"source"		: "Content/Source/crane.png",
+			"spread"		: 32,
+
+			"@(pc)"	: {
+				"format" : "DXT1"
+			},
+
+			"@(android)" : {
+				"format" : "ETC1",
+
+				"@(tegra)" : {
+					"format" : "DXT1"
+				}
+			},
+
+			"@(html5)" : {
+				"format" : "DXT1"
+			}
+		},
+
+
+
 
 		{
 			"type"			: "ScnTexture",

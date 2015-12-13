@@ -55,16 +55,26 @@
    {
       "name": "JunkBallEntity",
       "type": "ScnEntity",
-
       "components": [
-        {
-          "type": "GaRollingBallRenderComponent",
-          "material": "$(ScnMaterial:materials.test)"
-        }
+ // {          "type": "GaRollingBallRenderComponent",          "material": "$(ScnMaterial:materials.test)"        }
+       {
+         "type": "ScnModelComponent",         
+         "model": "$(ScnModel:this.playerball_model)",          
+         "scale": "1.0, 1.0, 1.0"        
+       }
       ]
     },
 
-    // ----- Crane Arm ----
+        {
+      "type": "ScnModel",
+      "name": "playerball_model",
+      "source": "Content/Source/playerball.fbx",
+      "materials": {
+        "(.*)": "$(ScnMaterial:materials.playerball)"
+      }
+    },
+
+     // ----- Crane Arm ----
    {
       "name": "CraneArmEntity",
       "type": "ScnEntity",
@@ -83,7 +93,7 @@
       "name": "crane_model",
       "source": "Content/Source/crane.fbx",
       "materials": {
-        "(.*)": "$(ScnMaterial:materials.test)"
+        "(.*)": "$(ScnMaterial:materials.crane)"
       }
     },
 

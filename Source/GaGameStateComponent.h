@@ -47,7 +47,6 @@ class GaGameStateComponent : public ScnComponent {
   GaCameraComponent* Cam_;
   GaRollingBallComponent* Ball_;
   ScnPhysicsWorldComponent* World_;
-  ScnEntity* FloorGrid_;
 
   BcU32 NoofJunk_ = 32;
   BcBool IsGameStarted_ = false;

@@ -12,7 +12,7 @@
         {
           "type": "ScnPhysicsWorldComponent",
           "gravity": "0.0, -9.8, 0.0",
-          "debugdrawworld": true
+          "debugdrawworld": false
         }
 
       ]

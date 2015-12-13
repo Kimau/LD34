@@ -92,6 +92,7 @@
 #include "GaMenuComponent.h"
 #include "GaRollingBallComponent.h"
 #include "GaRollingBallRenderComponent.h"
+#include "GaSkyComponent.h"
 #include "GaStartStateComponent.h"
 void AutoGenRegisterReflection() {
   MaAABB::StaticRegisterClass();
@@ -214,5 +215,6 @@ void AutoGenRegisterReflection() {
   GaMenuComponent::StaticRegisterClass();
   GaRollingBallComponent::StaticRegisterClass();
   GaRollingBallRenderComponent::StaticRegisterClass();
+  GaSkyComponent::StaticRegisterClass();
   GaStartStateComponent::StaticRegisterClass();
 }

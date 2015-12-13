@@ -1,0 +1,71 @@
+{
+  "resources": [
+    {
+      "name": "SkyEntity",
+      "type": "ScnEntity",
+      "components": [
+        {
+          "$Class": "GaSkyComponent",
+          "type": "GaSkyComponent",
+          "material": "$(ScnMaterial:this.sky_material)"
+        }
+      ]
+    },
+    {
+      "type": "ScnMaterial",
+      "name": "sky_material",
+      "shader": "$(ScnShader:this.skybox)",
+      "textures": {},
+      "samplers"    : {},
+
+      // New render state.
+      "renderstate" : {
+        "blendstate" : {
+          "rendertarget" : [
+            {
+              "enable" : false
+            }
+          ]
+        },
+
+        "depthstencilstate" : {
+          "depthtestenable" : true,
+          "depthwriteenable" : false,
+          "depthfunc" : "lessequal",
+          "stencilenable" : false
+        },
+
+        "rasteriserstate" : {
+          "fillmode" : "solid",
+          "cullmode" : "none",
+          "depthclipenable" : true,
+          "antialiasedlineenable" : true
+        }
+      }
+    },
+    {
+      "type": "ScnShader",
+      "name": "skybox",
+      "sources": {
+        "GLSL_330": "Content/Shader/sky.glsl",
+        "GLSL_ES_100": "Content/Shader/sky.glsl"
+      },
+      "@(android)": {
+        "sources": {
+          "GLSL_ES_100": "Content/Shader/sky.glsl"
+        }
+      },
+      "excludepermutations": [
+        "RENDER_DEFERRED",
+        "RENDER_FORWARD_PLUS",
+        "PASS_SHADOW",
+        "MESH_INSTANCED_3D",
+        "LIGHTING_DIFFUSE"
+      ],
+      "entrypoints": {
+        "vertex": "vertexMain",
+        "pixel": "pixelMain"
+      }
+    }
+  ]
+}

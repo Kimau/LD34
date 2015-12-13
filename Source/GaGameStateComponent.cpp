@@ -3,6 +3,7 @@
 #include "GaGameStateComponent.h"
 #include "GaJunkComponent.h"
 #include "GaGameTimer.h"
+#include "GaSkyComponent.h"
 #include "System/Scene/Rendering/ScnDebugRenderComponent.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -37,7 +38,14 @@ void GaGameStateComponent::onAttach(ScnEntityWeakRef Parent) {
 
   Cam_ = nullptr;
   Ball_ = nullptr;
-  FloorGrid_ = nullptr;
+
+  // Spawn Sky
+  auto skySpawn = ScnEntitySpawnParams("SkyEntity_0", "sky", "SkyEntity",
+                                       MaMat4d(), Parent);
+  skySpawn.OnSpawn_ = [this](ScnEntity* NewEntity) {
+    // Nothing on Spawn
+  };
+  ScnCore::pImpl()->spawnEntity(skySpawn);
 
   // Spawn Camera
   auto camSpawn = ScnEntitySpawnParams("CameraEntity_0", "default",
@@ -55,15 +63,6 @@ void GaGameStateComponent::onAttach(ScnEntityWeakRef Parent) {
     Ball_ = NewEntity->getComponentByType<GaRollingBallComponent>();
   };
   ScnCore::pImpl()->spawnEntity(ballSpawn);
-
-  // Floor
-  MaMat4d Transform;
-  Transform.translation(MaVec3d(0, 0.0f, 0));
-  auto floorSpawn = ScnEntitySpawnParams("FloorGrid", "game", "FloorEntity",
-                                         Transform, Parent);
-  floorSpawn.OnSpawn_ =
-      [this](ScnEntity* NewEntity) { FloorGrid_ = NewEntity; };
-  ScnCore::pImpl()->spawnEntity(floorSpawn);
 
   using namespace std::placeholders;
   OsCore::pImpl()->subscribe(
@@ -161,11 +160,7 @@ void GaGameStateComponent::SpawnJunk(MaVec3d spawnPos, MaVec3d spawnDir,
 }
 
 void GaGameStateComponent::updateFloorPosition(MaVec3d p, MaVec3d v) {
-  MaVec3d gridMid = p + v * 10;
-  MaMat4d m;
-  m.translation(MaVec3d(gridMid.x() - fmodf(gridMid.x(), 16.0f), 0,
-                        gridMid.z() - fmodf(gridMid.z(), 16.0f)));
-  FloorGrid_->setWorldMatrix(m);
+  // Do Nothing
 }
 
 void GaGameStateComponent::update(BcF32 Tick) {

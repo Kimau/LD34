@@ -26,6 +26,17 @@ GaGridComponent::GaGridComponent() {}
 GaGridComponent::~GaGridComponent() {}
 
 void GaGridComponent::render(ScnRenderContext& RenderContext) {
+  // AABB
+  MaMat4d mat = ParentEntity_->getWorldMatrix();
+  MaVec4d a = mat.row3();
+  BcF32 scale = 10000.0f;
+
+  MaVec3d minZZ = MaVec3d(a.x() - scale, a.y() - scale, a.z() - scale);
+
+  MaVec3d maxZZ = MaVec3d(a.x() + scale, a.y() + scale, a.z() + scale);
+
+  AABB_ = MaAABB(minZZ, maxZZ);
+
   // Material
   {
     // Set model parameters on material.
@@ -62,10 +73,7 @@ void GaGridComponent::render(ScnRenderContext& RenderContext) {
   });
 }
 
-MaAABB GaGridComponent::getAABB() const {
-  return MaAABB(MaVec3d(-100.0f, -100.0f, -100.0f),
-                MaVec3d(100.0f, 100.0f, 100.0f));
-}
+MaAABB GaGridComponent::getAABB() const { return AABB_; }
 
 void GaGridComponent::onAttach(ScnEntityWeakRef Parent) {
   BcAssert(Material_ != nullptr);

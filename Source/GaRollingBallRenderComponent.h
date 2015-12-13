@@ -54,6 +54,8 @@ class GaRollingBallRenderComponent : public ScnRenderableComponent {
   SysFence UploadFence_;
   SysFence RenderFence_;
 
+  MaAABB AABB_;
+
   const BcU16 NOOF_VERTS_ROLLING_BALL = 4 * 6;
   const BcU16 NOOF_INDEXES_ROLLING_BALL = 6 * 6;
 };

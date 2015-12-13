@@ -103,7 +103,8 @@ void GaGameStateComponent::gameStart() {
   while (JunkVector_.empty() == false) {
     auto j = JunkVector_.back();
     JunkVector_.pop_back();
-    ParentEntity_->detach(j);
+    ScnCore::pImpl()->removeEntity(j);
+    // ParentEntity_->detach(j);
   }
 
   // Reset Ball

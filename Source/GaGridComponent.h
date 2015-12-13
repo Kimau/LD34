@@ -36,6 +36,7 @@ class GaGridComponent : public ScnRenderableComponent {
  private:
   BcF32 GridSize_ = 1.0f;
   BcU32 NoofGridLines_ = 32;
+  MaAABB AABB_;
 
   // Psybrus Bits
   RsVertexDeclarationUPtr pVertexDeclaration_ = nullptr;

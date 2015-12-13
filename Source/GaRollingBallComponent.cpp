@@ -1,4 +1,5 @@
 #include "GaRollingBallComponent.h"
+#include "GaRollingBallRenderComponent.h"
 
 #include "System/Scene/Rendering/ScnDebugRenderComponent.h"
 
@@ -118,6 +119,9 @@ void GaRollingBallComponent::update(BcF32 Tick) {
   if (Size_ < 0.1f) {
     ResetBall();
   }
+
+  // ScnDebugRenderComponent::pImpl()->drawAABB(JunkBall_->getComponentByType<GaRollingBallRenderComponent>()->getAABB(),
+  // RsColour(0.0,1.0f,0.0f,1.0f));
 
   // Move Crane Arm
   IsShooting_ = BcFalse;

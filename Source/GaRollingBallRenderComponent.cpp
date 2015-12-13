@@ -134,6 +134,20 @@ void GaRollingBallRenderComponent::onDetach(ScnEntityWeakRef Parent) {
 }
 
 void GaRollingBallRenderComponent::render(ScnRenderContext& RenderContext) {
+  // AABB
+  MaMat4d mat = ParentEntity_->getWorldMatrix();
+  MaVec4d a = mat.row3();
+  BcF32 scale = mat.row0().x();
+  if (mat.row1().y() > scale) scale = mat.row1().y();
+  if (mat.row2().z() > scale) scale = mat.row2().z();
+  if (mat.row3().w() > scale) scale = mat.row3().w();
+
+  MaVec3d minZZ = MaVec3d(a.x() - scale, a.y() - scale, a.z() - scale);
+
+  MaVec3d maxZZ = MaVec3d(a.x() + scale, a.y() + scale, a.z() + scale);
+
+  AABB_ = MaAABB(minZZ, maxZZ);
+
   // Material
   {
     // Set model parameters on material.
@@ -169,10 +183,7 @@ void GaRollingBallRenderComponent::render(ScnRenderContext& RenderContext) {
   });
 }
 
-MaAABB GaRollingBallRenderComponent::getAABB() const {
-  return MaAABB(MaVec3d(-100.0f, -100.0f, -100.0f),
-                MaVec3d(100.0f, 100.0f, 100.0f));
-}
+MaAABB GaRollingBallRenderComponent::getAABB() const { return AABB_; }
 
 void GaRollingBallRenderComponent::generateBallMesh(BcF32 radius) {
   GaRollingBallVertex* pVert = pVertices_;

@@ -1,0 +1,96 @@
+{
+	"resources" : [
+		{
+			"type" : "ScnTextureAtlas",
+			"name" : "particle_texture",
+
+			"tileatlas" : true,
+			"tilewidth" : 64,
+			"tileheight" : 64,
+
+			"source" : "Content/Source/particles.png",
+
+			"format" : "R8G8B8A8"
+		},
+
+		{
+			"type" : "ScnShader",
+			"name" : "particle_shader",
+
+			"sources" 		: {
+				"GLSL_330" : "Content/Engine/particle.glsl",
+				"GLSL_ES_100" : "Content/Engine/particle.glsl"
+			},
+
+			"@(android)" : {
+				"sources" 		: {
+					"GLSL_ES_100" : "Content/Engine/particle.glsl"
+				}
+			},
+
+			"includepermutations" : [
+				"MESH_PARTICLE_3D",
+				"PASS_MAIN",
+				"LIGHTING_NONE"
+			],
+
+			"entrypoints"		: {
+				"vertex" : "vertexMain",
+				"pixel" : "pixelTexturedMain"
+			}
+		},
+
+		{
+			"type" : "ScnMaterial",
+			"name" : "material",
+
+			// Shader
+			"shader"		: "$(ScnShader:shaders.textured)",
+
+			// Textures
+			"textures"		: {
+				"aDiffuseTex"	: "$(ScnTexture:this.particle_texture)"
+			},
+
+			// Samplers
+			"samplers"		: {
+				"aDiffuseTex"	: {
+					"addressu" : "clamp",
+					"addressv" : "clamp",
+					"minfilter" : "linear",
+					"magfilter" : "linear"
+				}
+			},
+			// New render state.
+			"renderstate" : {
+				"blendstate" : {
+					"rendertarget" : [
+						{
+						  "enable" : true,
+							"srcblend" : "srcalpha",
+							"destblend" : "one",
+							"blendop" : "add",
+							"srcblendalpha" : "srcalpha",
+							"destblendalpha" : "one",
+							"blendopalpha" : "add"
+						}
+					]
+				},
+
+				"depthstencilstate" : {
+					"depthtestenable" : true,
+					"depthwriteenable" : false,
+					"depthfunc" : "lessequal",
+					"stencilenable" : false
+				},
+
+				"rasteriserstate" : {
+					"fillmode" : "solid",
+					"cullmode" : "none",
+					"depthclipenable" : true,
+					"antialiasedlineenable" : true
+				}
+			}
+		}
+	]
+}

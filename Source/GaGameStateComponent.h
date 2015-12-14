@@ -5,6 +5,7 @@
 #include "Base/BcRandom.h"
 #include "System/Scene/ScnEntity.h"
 #include "system/Scene/Physics/ScnPhysicsWorldComponent.h"
+#include "System/Scene/Rendering/ScnParticleSystemComponent.h"
 #include "System/Os/OsCore.h"
 
 #include "GaCameraComponent.h"
@@ -39,6 +40,8 @@ class GaGameStateComponent : public ScnComponent {
 
   virtual void update(BcF32 Tick);
 
+  void spawnParticle(MaVec3d p, MaVec3d v, BcF32 scale);
+
   void UpdateCameraLogic();
 
  private:
@@ -47,7 +50,9 @@ class GaGameStateComponent : public ScnComponent {
   GaCameraComponent* Cam_;
   GaRollingBallComponent* Ball_;
   ScnPhysicsWorldComponent* World_;
+  ScnParticleSystemComponent* ParticleSys_;
 
+  BcF32 TimeSinceSpawn_ = 0.0f;
   BcU32 NoofJunk_ = 32;
   BcBool IsGameStarted_ = false;
   BcRandom RandObj_;

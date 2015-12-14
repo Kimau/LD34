@@ -9,6 +9,13 @@
           "type": "GaGameStateComponent"
         },
 
+                {
+          "type" : "ScnParticleSystemComponent",
+          "noofparticles" : 1000,
+          "islocalspace" : false,
+          "material" : "$(ScnMaterial:particle.material)"
+        },
+
         {
           "type": "ScnPhysicsWorldComponent",
           "gravity": "0.0, -9.8, 0.0",

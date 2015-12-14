@@ -39,6 +39,11 @@ void GaGameStateComponent::onAttach(ScnEntityWeakRef Parent) {
   Cam_ = nullptr;
   Ball_ = nullptr;
 
+  ParticleSys_ = getComponentAnyParentByType<ScnParticleSystemComponent>();
+  BcAssertMsg(ParticleSys_ != nullptr, "Cannot find particle system");
+
+  // ParticleSys_->setTransform(ParentEntity_->getWorldMatrix());
+
   // Spawn Sky
   auto skySpawn = ScnEntitySpawnParams("SkyEntity_0", "sky", "SkyEntity",
                                        MaMat4d(), Parent);
@@ -175,15 +180,27 @@ void GaGameStateComponent::update(BcF32 Tick) {
   auto v = Ball_->vel();
   auto vDir = v.normal();
   auto p = Ball_->pos();
+  auto pFloor = MaVec3d(p.x(), 0.0, p.z());
   auto sz = Ball_->sz();
   auto ax = v.cross(MaVec3d(0.0f, 1.0f, 0.0f)).normal();
+
+  // Spawn Particles
+  while (TimeSinceSpawn_ > 0.1f) {
+    spawnParticle(pFloor, MaVec3d(RandObj_.randRealRange(-2.0f, +2.0f), sz,
+                                  RandObj_.randRealRange(-20.0f, +20.0f)) +
+                              v * 0.5f,
+                  10.0f);
+    TimeSinceSpawn_ -= 0.1f;
+  }
+  TimeSinceSpawn_ += Tick;
 
   //
   if (Ball_->isShooting()) {
     GaGameTimer::pImpl()->SetMulti(0.3f);
 
     ScnPhysicsLineCastResult result;
-    if (World_->lineCast(p, p + Ball_->getRay() * 100.0f, &result) == BcTrue) {
+    if (World_->lineCast(pFloor, pFloor + Ball_->getRay() * 100.0f, &result) ==
+        BcTrue) {
       ScnDebugRenderComponent::pImpl()->drawCircle(
           result.Intersection_, MaVec3d(1.0f, 1.0f, 1.0f),
           RsColour(1.0f, 0.0f, 0.0f, 1.0f));
@@ -233,6 +250,33 @@ void GaGameStateComponent::update(BcF32 Tick) {
   UpdateCameraLogic();
 
   updateFloorPosition(p, v);
+}
+
+void GaGameStateComponent::spawnParticle(MaVec3d p, MaVec3d v, BcF32 scale) {
+  ScnParticle* particle;
+  ParticleSys_->allocParticle(particle);
+
+  particle->Position_ = p * 2.0f;       // Position.
+  particle->Velocity_ = v;              // Velocity.
+  particle->Acceleration_ = MaVec3d();  // Acceleration.
+
+  particle->Scale_ = MaVec2d(1.0f, 1.0f);       // Scale.
+  particle->MinScale_ = MaVec2d(1.0f, 1.0f);    // Min scale. (time based)
+  particle->MaxScale_ = MaVec2d(scale, scale);  // Max scale. (time based)
+
+  particle->Rotation_ = RandObj_.randRealRange(0.0f, 4.0f);
+  particle->RotationMultiplier_ =
+      RandObj_.randRealRange(-0.5f, +0.5f);  // Rotation mult.
+
+  static RsColour pinkCol = RsColour(1.0, 0.0f, 1.0f, 1.0f);
+  particle->Colour_ = RsColour::WHITE;     // Colour;
+  particle->MinColour_ = RsColour::WHITE;  // Min colour. (time based)
+  particle->MaxColour_ = RsColour::BLACK;  // Max colour. (time based)
+
+  particle->TextureIndex_ = 8;    // Texture index.
+  particle->CurrentTime_ = 0.0f;  // Current time.
+  particle->MaxTime_ = 5.0f;      // Max time.
+  particle->Alive_ = BcTrue;      // Are we alive?
 }
 
 void GaGameStateComponent::UpdateCameraLogic() {

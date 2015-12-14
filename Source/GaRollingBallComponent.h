@@ -41,7 +41,6 @@ class GaRollingBallComponent : public ScnComponent {
   const MaVec3d& vel() const { return Vel_; };
   const BcF32& sz() const { return Size_; };
 
- private:
   ScnEntity* CraneArm_;
   ScnEntity* JunkBall_;
 
@@ -53,6 +52,8 @@ class GaRollingBallComponent : public ScnComponent {
   BcF32 CraneArmRot_ = 0.0f;
   BcF32 CraneArmRotCurrSpeed_ = 0.0f;
   BcF32 CraneArmRotSpeed_ = 5.0f;
+
+  BcF32 CooldownTimer_ = 1.0f;
 
   BcF32 InitialSize_ = 2.0f;
   BcF32 InitialSpeed_ = 10.0f;

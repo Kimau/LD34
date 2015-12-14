@@ -197,9 +197,18 @@ void GaGameStateComponent::update(BcF32 Tick) {
   //
   if (Ball_->isShooting()) {
     GaGameTimer::pImpl()->SetMulti(0.3f);
+    ParticleSys_->setHackTimer(0.3f);
 
     ScnPhysicsLineCastResult result;
-    if (World_->lineCast(pFloor, pFloor + Ball_->getRay() * 100.0f, &result) ==
+
+    auto linePt = p + Ball_->getRay() * (sz+1.0f);
+    for (BcF32 si = sz+1.0f; si < 25.0f; si += 0.25f) {
+      spawnLineParticle(linePt);
+
+      linePt += Ball_->getRay() * 0.25f;
+    }
+
+    if (World_->lineCast(pFloor, pFloor + Ball_->getRay() * 25.0f, &result) ==
         BcTrue) {
       ScnDebugRenderComponent::pImpl()->drawCircle(
           result.Intersection_, MaVec3d(1.0f, 1.0f, 1.0f),
@@ -211,11 +220,17 @@ void GaGameStateComponent::update(BcF32 Tick) {
       JunkVector_.remove(result.Entity_);
       ParentEntity_->detach(result.Entity_);
     }
+
+    Ball_->IsShooting_ = BcFalse;
   } else if (Ball_->IsAiming()) {
     GaGameTimer::pImpl()->SetMulti(0.1f);
+    ParticleSys_->setHackTimer(0.1f);
   } else {
     GaGameTimer::pImpl()->SetMulti(1.0f);
+    ParticleSys_->setHackTimer(1.0f);
   }
+
+  
 
   // Junk Update
   {
@@ -236,11 +251,12 @@ void GaGameStateComponent::update(BcF32 Tick) {
 
     while (JunkVector_.size() < NoofJunk_) {
       MaVec3d spawnPos = p +
-                         v * RandObj_.randRealRange(+80.0f, +120.0f) +  // Ahead
-                         ax * RandObj_.randRealRange(-60.0f, +60.0f);
+        vDir * RandObj_.randRealRange(+200.0f, +500.0f) +  // Ahead
+                         ax * RandObj_.randRealRange(-120.0f, +120.0f);
       MaVec3d spawnDir = MaVec3d(RandObj_.randRealRange(-1.5f, -0.5f), 0.0f,
                                  RandObj_.randRealRange(-0.3f, 0.3f));
-      BcF32 spawnSize = RandObj_.randRealRange(sz * 0.5f, sz * 2.0f);
+      BcF32 spawnSize = RandObj_.randRealRange(0.5f, 2.0f);
+
 
       SpawnJunk(spawnPos, spawnDir, spawnSize);
     }
@@ -269,13 +285,39 @@ void GaGameStateComponent::spawnParticle(MaVec3d p, MaVec3d v, BcF32 scale) {
       RandObj_.randRealRange(-0.5f, +0.5f);  // Rotation mult.
 
   static RsColour pinkCol = RsColour(1.0, 0.0f, 1.0f, 1.0f);
-  particle->Colour_ = RsColour::WHITE;     // Colour;
-  particle->MinColour_ = RsColour::WHITE;  // Min colour. (time based)
+  particle->Colour_ = pinkCol;     // Colour;
+  particle->MinColour_ = pinkCol;  // Min colour. (time based)
   particle->MaxColour_ = RsColour::BLACK;  // Max colour. (time based)
 
   particle->TextureIndex_ = 8;    // Texture index.
   particle->CurrentTime_ = 0.0f;  // Current time.
   particle->MaxTime_ = 5.0f;      // Max time.
+  particle->Alive_ = BcTrue;      // Are we alive?
+}
+
+void GaGameStateComponent::spawnLineParticle(MaVec3d p)
+{
+  ScnParticle* particle;
+  ParticleSys_->allocParticle(particle);
+
+  particle->Position_ = p * 2.0f;       // Position.
+  particle->Velocity_ = MaVec3d();        // Velocity.
+  particle->Acceleration_ = MaVec3d();  // Acceleration.
+
+  particle->MaxScale_ = particle->MinScale_ = particle->Scale_ = MaVec2d(1.0f, 1.0f);
+
+  particle->Rotation_ = RandObj_.randRealRange(0.0f, 4.0f);
+  particle->RotationMultiplier_ =
+    RandObj_.randRealRange(-0.5f, +0.5f);  // Rotation mult.
+
+  static RsColour pinkCol = RsColour(1.0, 0.0f, 1.0f, 1.0f);
+  particle->Colour_ = pinkCol;     // Colour;
+  particle->MinColour_ = pinkCol;  // Min colour. (time based)
+  particle->MaxColour_ = RsColour::BLACK;  // Max colour. (time based)
+
+  particle->TextureIndex_ = 0;    // Texture index.
+  particle->CurrentTime_ = 0.0f;  // Current time.
+  particle->MaxTime_ = RandObj_.randRealRange(0.9f, 1.1f);      // Max time.
   particle->Alive_ = BcTrue;      // Are we alive?
 }
 

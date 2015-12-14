@@ -129,7 +129,10 @@ void GaRollingBallComponent::update(BcF32 DONOTUSETick) {
   // Move Crane Arm
   IsShooting_ = BcFalse;
   IsAiming_ = BcFalse;
-  if (Left_ && Right_) {
+
+  if (CooldownTimer_ > 0.0f)
+    CooldownTimer_ -= Tick;
+  else if (Left_ && Right_) {
     // Shoot Crane Arm
     MaMat4d caMat;
     caMat.rotation(MaVec3d(0.0f, -CraneArmRot_, 0.0f));
@@ -141,6 +144,7 @@ void GaRollingBallComponent::update(BcF32 DONOTUSETick) {
 
     ShootRay_ = dirVec;
     IsShooting_ = BcTrue;
+    CooldownTimer_ = 1.0f;
   } else if (Left_) {
     IsAiming_ = BcTrue;
     CraneArmRotCurrSpeed_ =

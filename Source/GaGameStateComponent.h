@@ -41,6 +41,7 @@ class GaGameStateComponent : public ScnComponent {
   virtual void update(BcF32 Tick);
 
   void spawnParticle(MaVec3d p, MaVec3d v, BcF32 scale);
+  void spawnLineParticle(MaVec3d p);
 
   void UpdateCameraLogic();
 
